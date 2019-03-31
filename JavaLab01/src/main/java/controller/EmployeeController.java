@@ -187,7 +187,16 @@ public class EmployeeController implements EmloyeeDAO {
 
     @Override
     public Optional findByName(String name) {
-        return Optional.empty();
+        try{
+            dbconn();
+            resultSet = statement.executeQuery("select * from employees where name like"+name);
+            while(resultSet.next()){
+                employees.add(new Employee(resultSet.getLong("id"),resultSet.getString("name"),resultSet.getString("email"),resultSet.getDouble("salary")));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     @Override
