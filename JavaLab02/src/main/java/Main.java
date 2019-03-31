@@ -6,5 +6,6 @@ public class Main {
         System.out.println(imp.findMostExpensiveVegetarian());
         System.out.println(imp.iLikeMeat());
         System.out.println(imp.groupByPrice());
+        System.out.println(imp.formatedMenu());
     }
 }

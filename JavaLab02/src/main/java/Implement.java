@@ -13,8 +13,13 @@ public class Implement {
                 .max(Comparator.comparing(b->b.getIngredients().stream().mapToInt(Ingredient::getPrice).sum())).get();
     }
     public List iLikeMeat(){
-        return Stream.of(Pizza.values()).filter(pizza -> pizza.getIngredients().stream().filter(ingredient -> ingredient.isMeat()).count() > 0)
-                .sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        return Stream.of(Pizza.values()).filter(pizza -> pizza.getIngredients().stream().anyMatch(Ingredient::isMeat))
+                .sorted(Comparator.comparingLong(pizza -> pizza.getIngredients().stream().filter(Ingredient::isMeat).count()))
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toCollection(ArrayList::new), lst -> {
+                            Collections.reverse(lst);
+                            return lst.stream();
+                        })).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Map groupByPrice(){
