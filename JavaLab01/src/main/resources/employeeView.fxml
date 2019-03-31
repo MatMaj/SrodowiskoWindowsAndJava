@@ -50,7 +50,7 @@
                         <Label layoutX="14.0" layoutY="28.0" text="Name" />
                         <Label layoutX="14.0" layoutY="82.0" text="Email" />
                         <Label layoutX="14.0" layoutY="136.0" text="Salary" />
-                        <Text fx:id="nullText" layoutX="12.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="." wrappingWidth="595.9999570846558" />
+                        <Text fx:id="nullText" layoutX="12.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" wrappingWidth="595.9999570846558" />
                      </children>
                   </Pane>
                </content>

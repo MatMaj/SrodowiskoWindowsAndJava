@@ -14,7 +14,7 @@ public interface EmloyeeDAO {
     Optional findByName(String name);
     /** * Usuwa pracownika */
     void delete(Employee employee);
-    /** * Dodaje, jeśli brak, lub aktualizuje pracownika */
+    /** * Dodaje, jeśli brak */
     void save(Employee employee);
     /** * Modyfikacja danych */
     void modify(Long id, String name, String email, Double salary);
