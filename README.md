@@ -1,2 +1,3 @@
 # SrodowiskoWindowsAndJava
-Zadania z programowania w środowisku windows oraz Javy
+Zadania z programowania w środowisku windows oraz zaawansowanego programowania obiektowego
+
