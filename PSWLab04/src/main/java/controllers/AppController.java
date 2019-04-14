@@ -13,7 +13,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.sql.*;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -196,6 +200,7 @@ public class AppController {
                             ((PreparedStatement) statement).setString(4, password);
                             ((PreparedStatement) statement).setString(5, email);
                             ((PreparedStatement) statement).execute();
+                            sendMail();
                         }
                     }
                 }else{
@@ -271,5 +276,36 @@ public class AppController {
             ex.printStackTrace();
         }
     }
+    void sendMail(){
+        final String  username = "javawindowslab";
+        final String password = "j@vawindows123";
+        String fromEmail = "javawindowslab@gmail.com";
+        String toEmail = regEmailField.getText();
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth","true");
+        properties.put("mail.smtp.starttls.enable","true");
+        properties.put("mail.smtp.host","mail.smtp.gmail.com");
+        properties.put("mail.smtp.port","587");
 
+        java.security.Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator(){
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+            });
+        MimeMessage msg = new MimeMessage(session);
+        try {
+            msg.setFrom(new InternetAddress(fromEmail));
+            msg.addRecipient(Message.RecipientType.TO,new InternetAddress(toEmail));
+            msg.setSubject("Rejestracja app laby");
+            msg.setText("Witaj w aplikacji");
+
+            Transport transport = session.getTransport("smtp");
+            transport.connect("smtp.gmail.com",username,password);
+            transport.sendMessage(msg,msg.getAllRecipients());
+            transport.close();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 }
