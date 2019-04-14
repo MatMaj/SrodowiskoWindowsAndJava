@@ -94,7 +94,7 @@ public class AppController {
                     rights=resultSet.getString("uprawnienia");
                 }
                 if(log.equals(pass)){
-                    addToInfoLabel("Login Succesfull", Color.RED);
+                    addToInfoLabel("Login Succesfull", Color.GREEN);
                     if(rights.equals("Administrator")){
                         try {
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/adminView.fxml"));
