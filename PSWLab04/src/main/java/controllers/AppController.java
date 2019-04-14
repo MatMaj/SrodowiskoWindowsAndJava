@@ -72,6 +72,7 @@ public class AppController {
             loginPasswordField.setVisible(true);
         }
     }
+
     private String log;
     private String pass;
     private String rights;
@@ -94,7 +95,7 @@ public class AppController {
                     rights=resultSet.getString("uprawnienia");
                 }
                 if(log.equals(pass)){
-                    addToInfoLabel("Login Succesfull", Color.GREEN);
+                    addToInfoLabel("Login Succesfull", Color.RED);
                     if(rights.equals("Administrator")){
                         try {
                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/adminView.fxml"));
@@ -134,6 +135,7 @@ public class AppController {
             }
         }
     }
+
     @FXML
     void checkRepeatPassword(KeyEvent event) {
         String password = regPasswordField.getText();
@@ -159,11 +161,49 @@ public class AppController {
         Matcher matcher = pattern.matcher(email);
 
         if(!matcher.matches() && !email.equals("")){
-            addToInfoLabel("Email się nie zgadza", Color.RED);
+            addToInfoLabel("Niepoprawny format email", Color.RED);
             regEmailField.setStyle("-fx-background-color: rgba(255,0,0,0.5); -fx-border-color: rgba(255,0,0,0.75); -fx-border-radius: 3px;");
         } else {
             endInfoLabelFadeOut();
             regEmailField.setStyle("-fx-background-color: white; -fx-border-color: #B5B5B5; -fx-border-radius: 3px;");
+        }
+    }
+    @FXML
+    void registerUser(ActionEvent event) {
+        if(regLoginField.getText().equals("")||regPasswordField.getText().equals("")||regRepeatPasswordField.getText().equals("")||regEmailField.getText().equals("")
+        ||regNameField.getText().equals("")||regSurnameField.getText().equals("")){
+            addToInfoLabel("Pola: Name, Surname, Email, Login, Password, Repeat Password are required!!!", Color.RED);
+        }else{
+            try{
+                if(regPasswordField.getText().equals(regRepeatPasswordField.getText())){
+                    if(loginExists()){
+                        addToInfoLabel("Istnieje już użytkownik o takim loginie! Zmień login", Color.RED);
+                    }else {
+                        if(emailExists()){
+                            addToInfoLabel("Istnieje już użytkownik o zadanym emailu! Zmień email", Color.RED);
+                        }else{
+                            dbconn();
+                            String name = regNameField.getText();
+                            String secondName = regSurnameField.getText();
+                            String email = regEmailField.getText();
+                            String login = regLoginField.getText();
+                            String password = regPasswordField.getText();
+                            statement = connector.prepareStatement("INSERT INTO userdatabase " +
+                                    "VALUES (NULL,?,?,?,?,?,'User',NOW())");
+                            ((PreparedStatement) statement).setString(1, name);
+                            ((PreparedStatement) statement).setString(2, secondName);
+                            ((PreparedStatement) statement).setString(3, login);
+                            ((PreparedStatement) statement).setString(4, password);
+                            ((PreparedStatement) statement).setString(5, email);
+                            ((PreparedStatement) statement).execute();
+                        }
+                    }
+                }else{
+                    addToInfoLabel("Hasła różią się!", Color.RED);
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
     }
     void addToInfoLabel(String text, Color color){
@@ -174,6 +214,50 @@ public class AppController {
     }
     void endInfoLabelFadeOut(){
         infoLabel.setVisible(false);
+    }
+    boolean loginExists(){
+        String login=regLoginField.getText();
+        String loginQuery;
+        boolean prawda=false;
+        dbconn();
+        try {
+            resultSet = statement.executeQuery("select login from userdatabase");
+            while (resultSet.next()) {
+                loginQuery=resultSet.getString(1);
+                if(loginQuery.equals(login)){
+                    prawda=true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(prawda){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    boolean emailExists(){
+        String email=regEmailField.getText();
+        String emailQuery;
+        boolean prawda=false;
+        dbconn();
+        try {
+            resultSet = statement.executeQuery("select email from userdatabase");
+            while (resultSet.next()) {
+                emailQuery=resultSet.getString("email");
+                if(emailQuery.equals(email)){
+                    prawda=true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(prawda){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private Connection connector;

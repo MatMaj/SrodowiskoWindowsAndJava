@@ -37,7 +37,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="262.0" layoutY="287.0" mnemonicParsing="false" text="REGISTER" />
+                        <Button layoutX="262.0" layoutY="287.0" mnemonicParsing="false" onAction="#registerUser" text="REGISTER" />
                         <TextField fx:id="regNameField" layoutX="226.0" layoutY="46.0" />
                         <TextField fx:id="regSurnameField" layoutX="226.0" layoutY="85.0" />
                         <TextField fx:id="regEmailField" layoutX="224.0" layoutY="122.0" onKeyReleased="#checkEmail" />
