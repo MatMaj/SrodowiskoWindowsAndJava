@@ -1,9 +1,11 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String args[]) throws InterruptedException {
@@ -22,7 +24,7 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("1 - zwyczajne, 2 - thread pool");
+        System.out.println("1 - zwyczajne, 2 - ThreadPoolExecutor, 3 - stream api, 4 - ExecutorService");
         switch (sc.nextInt()) {
             case 1:
                 ArrayList<Thread> threads = new ArrayList<Thread>(NUMBER_OF_CONSUMERS + NUMBER_OF_PRODUCERS);
@@ -48,14 +50,34 @@ public class Main {
                 break;
             case 2:
                 startTime = System.nanoTime();
-                ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+                ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(NUMBER_OF_THREADS);
                 for (int i = 0; i < NUMBER_OF_THREADS; i++) {
-                    executor.submit(new ProduceAndConsume(items));
+                    threadPoolExecutor.submit(new ProduceAndConsume(items));
                 }
-                executor.shutdown();
-                boolean finished = executor.awaitTermination(5, TimeUnit.MINUTES);
+                threadPoolExecutor.shutdown();
+                boolean finished = threadPoolExecutor.awaitTermination(5, TimeUnit.MINUTES);
                 endTime = System.nanoTime();
                 break;
+            case 3:
+                startTime = System.nanoTime();
+                Stream.of(items).parallel().forEach(item -> {
+                    item.produceMe();
+                    item.consumeMe();
+                });
+                endTime = System.nanoTime();
+                break;
+            case 4:
+                startTime = System.nanoTime();
+                ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+                for (int i = 0; i < NUMBER_OF_THREADS; i++) {
+                    executorService.submit(new ProduceAndConsume(items));
+                }
+                executorService.shutdown();
+                while (!executorService.isTerminated()) {
+                }
+                endTime = System.nanoTime();
+                break;
+
         }
         System.out.println("Czas: " + ((endTime - startTime) / 1000000) + "ms" );
     }
