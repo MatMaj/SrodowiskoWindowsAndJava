@@ -24,7 +24,7 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("1 - zwyczajne, 2 - ThreadPoolExecutor, 3 - stream api, 4 - ExecutorService");
+        System.out.println("1 - Zwyczajne, 2 - Stream API(parallel), 3 - FixedThreadPool, 4 - SingleThreadPool, 5 - CachedThreadPool");
         switch (sc.nextInt()) {
             case 1:
                 ArrayList<Thread> threads = new ArrayList<Thread>(NUMBER_OF_CONSUMERS + NUMBER_OF_PRODUCERS);
@@ -50,34 +50,40 @@ public class Main {
                 break;
             case 2:
                 startTime = System.nanoTime();
-                ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(NUMBER_OF_THREADS);
-                for (int i = 0; i < NUMBER_OF_THREADS; i++) {
-                    threadPoolExecutor.submit(new ProduceAndConsume(items));
-                }
-                threadPoolExecutor.shutdown();
-                boolean finished = threadPoolExecutor.awaitTermination(5, TimeUnit.MINUTES);
-                endTime = System.nanoTime();
-                break;
-            case 3:
-                startTime = System.nanoTime();
                 Stream.of(items).parallel().forEach(item -> {
                     item.produceMe();
                     item.consumeMe();
                 });
                 endTime = System.nanoTime();
                 break;
-            case 4:
+            case 3:
                 startTime = System.nanoTime();
-                ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+                ThreadPoolExecutor executorFixed = (ThreadPoolExecutor) Executors.newFixedThreadPool(NUMBER_OF_THREADS);
                 for (int i = 0; i < NUMBER_OF_THREADS; i++) {
-                    executorService.submit(new ProduceAndConsume(items));
+                    executorFixed.submit(new ProduceAndConsume(items));
                 }
-                executorService.shutdown();
-                while (!executorService.isTerminated()) {
-                }
+                executorFixed.shutdown();
+                executorFixed.awaitTermination(5, TimeUnit.MINUTES);
                 endTime = System.nanoTime();
                 break;
-
+            case 4:
+                startTime = System.nanoTime();
+                ExecutorService executorSingle = Executors.newSingleThreadExecutor();
+                executorSingle.submit(new ProduceAndConsume(items));
+                executorSingle.shutdown();
+                executorSingle.awaitTermination(10, TimeUnit.MINUTES);
+                endTime = System.nanoTime();
+                break;
+            case 5:
+                startTime = System.nanoTime();
+                ThreadPoolExecutor executorCached = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+                for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
+                    executorCached.submit(new ProduceAndConsume(items));
+                }
+                executorCached.shutdown();
+                executorCached.awaitTermination(5, TimeUnit.MINUTES);
+                endTime = System.nanoTime();
+                break;
         }
         System.out.println("Czas: " + ((endTime - startTime) / 1000000) + "ms" );
     }
