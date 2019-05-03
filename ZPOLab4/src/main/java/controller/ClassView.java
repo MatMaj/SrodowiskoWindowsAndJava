@@ -56,7 +56,7 @@ public class ClassView {
             Parent root2 = fxmlLoader.load();
             Stage aboutStage = new Stage();
             aboutStage.setTitle("Created Object");
-            aboutStage.setScene(new Scene(root2,640,480));
+            aboutStage.setScene(new Scene(root2));
             aboutStage.show();
         } catch (Exception e){
             e.printStackTrace();

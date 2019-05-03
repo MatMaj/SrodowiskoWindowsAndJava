@@ -12,7 +12,7 @@
    <children>
       <Button fx:id="showClassName" layoutX="257.0" layoutY="168.0" mnemonicParsing="false" onAction="#showClass" text="Show Classes" />
       <Button fx:id="createObjectName" layoutX="258.0" layoutY="246.0" mnemonicParsing="false" onAction="#createObject" text="Create Object" />
-      <Label fx:id="classList" layoutX="19.0" layoutY="66.0" prefHeight="91.0" prefWidth="562.0" />
+      <Label fx:id="classList" layoutX="19.0" layoutY="66.0" prefHeight="91.0" prefWidth="562.0" textFill="#766f6f" />
       <TextField fx:id="inputClassName" layoutX="228.0" layoutY="209.0" />
       <Label layoutX="136.0" layoutY="213.0" text="Class Name" />
       <Label layoutX="8.0" layoutY="38.0" text="Classes List:" />

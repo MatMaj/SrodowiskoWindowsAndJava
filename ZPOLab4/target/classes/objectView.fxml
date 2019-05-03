@@ -5,22 +5,22 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ObjectView">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ObjectView">
    <children>
       <Label layoutX="11.0" layoutY="14.0" text="Names and values of fields with getters" />
-      <Label fx:id="getterFieldsNames" layoutX="14.0" layoutY="32.0" prefHeight="68.0" prefWidth="574.0" />
-      <Label layoutX="12.0" layoutY="100.0" text="Names of fields with setters" />
-      <Label fx:id="setterFieldsNames" layoutX="12.0" layoutY="118.0" prefHeight="68.0" prefWidth="574.0" />
-      <Label layoutX="12.0" layoutY="258.0" text="Names of available methods" />
-      <Label fx:id="methodsFieldsNames" layoutX="12.0" layoutY="276.0" prefHeight="68.0" prefWidth="574.0" />
-      <TextField fx:id="fieldName" layoutX="92.0" layoutY="209.0" />
-      <TextField fx:id="value" layoutX="331.0" layoutY="209.0" />
-      <Label layoutX="12.0" layoutY="213.0" text="Field Name" />
-      <Label layoutX="286.0" layoutY="213.0" text="Value" />
-      <Button layoutX="528.0" layoutY="208.0" mnemonicParsing="false" onAction="#fillField" prefHeight="26.0" prefWidth="60.0" text="Fill" />
-      <TextField fx:id="methodName" layoutX="123.0" layoutY="351.0" />
-      <Label layoutX="14.0" layoutY="355.0" text="Method Name" />
-      <Button layoutX="331.0" layoutY="351.0" mnemonicParsing="false" onAction="#invokeMethod" text="Invoke Method" />
-      <Label fx:id="invokedMethodLabel" layoutX="14.0" layoutY="389.0" prefHeight="68.0" prefWidth="574.0" />
+      <Label fx:id="getterFieldsNames" layoutX="14.0" layoutY="34.0" prefHeight="92.0" prefWidth="574.0" textFill="#766f6f" />
+      <Label layoutX="12.0" layoutY="131.0" text="Names of fields with setters" />
+      <Label fx:id="setterFieldsNames" layoutX="12.0" layoutY="149.0" prefHeight="102.0" prefWidth="574.0" textFill="#766f6f" />
+      <Label layoutX="14.0" layoutY="302.0" text="Names of available methods" />
+      <Label fx:id="methodsFieldsNames" layoutX="14.0" layoutY="320.0" prefHeight="68.0" prefWidth="574.0" textFill="#766f6f" />
+      <TextField fx:id="fieldName" layoutX="93.0" layoutY="261.0" />
+      <TextField fx:id="value" layoutX="332.0" layoutY="261.0" />
+      <Label layoutX="13.0" layoutY="265.0" text="Field Name" />
+      <Label layoutX="287.0" layoutY="265.0" text="Value" />
+      <Button layoutX="519.0" layoutY="260.0" mnemonicParsing="false" onAction="#fillField" prefHeight="26.0" prefWidth="70.0" text="Set Value" />
+      <TextField fx:id="methodName" layoutX="123.0" layoutY="400.0" />
+      <Label layoutX="14.0" layoutY="404.0" text="Method Name" />
+      <Button layoutX="331.0" layoutY="400.0" mnemonicParsing="false" onAction="#invokeMethod" text="Invoke Method" />
+      <Label fx:id="invokedMethodLabel" layoutX="14.0" layoutY="438.0" prefHeight="102.0" prefWidth="574.0" textFill="#766f6f" />
    </children>
 </AnchorPane>

@@ -72,6 +72,7 @@ public class ObjectView {
         for(String m: methodList){
             if(m.equals(methodName)){
                 exists= true;
+                break;
             }
             else{
                 exists =false;
@@ -129,14 +130,14 @@ public class ObjectView {
                 for(Field field: fields){
                     String f="get"+field.getName().toLowerCase();
                     if(method.getName().toLowerCase().equals(f)){
-                        methGet+=field.getName() + " " + field.getType().toString()+"\n";
+                        methGet+="Field name: "+ field.getName() + " Field type: " + field.getType().toString()+"\n";
                     }
                 }
             else if(isSetter(method)){
                 for(Field field: fields){
                     String f="set"+field.getName().toLowerCase();
                     if(method.getName().toLowerCase().equals(f)){
-                        methSet+=field.getName() + " " + field.getType().toString()+"\n";
+                        methSet+="Field name: " + field.getName() + " Field type: " + field.getType().toString()+"\n";
                     }
                 }
             }
