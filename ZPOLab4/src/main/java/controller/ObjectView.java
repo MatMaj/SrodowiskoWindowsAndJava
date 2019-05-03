@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ObjectView {
     private String clName;
-    private List fieldList;
     private List methodList;
 
     private static Object gameClass = null;
@@ -31,8 +30,8 @@ public class ObjectView {
 
     public void initialize(){
         clName=ClassView.className;
+        System.out.println(clName);
         createClassObject(clName);
-        getMethods();
     }
 
     @FXML
@@ -45,9 +44,8 @@ public class ObjectView {
     }
     @FXML
     void getFields(ActionEvent event) {
-        //takeFields();
-        System.out.println(methodList.toString());
-
+        getMethods();
+        getterFieldsNames.setText(methodList.toString());
     }
 
     void createClassObject(String ClassName){
@@ -62,18 +60,10 @@ public class ObjectView {
         }
     }
 
-    void takeFields(){
-        Field[] classField = gameClass.getClass().getFields();
-        for(Field f: classField){
-            fieldList.add(f.getName() + " : " + f.getType());
-        }
-    }
-
     void getMethods(){
         Method[] method = gameClass.getClass().getMethods();
         for(Method m:method){
             methodList.add(m.getName());
         }
     }
-
 }

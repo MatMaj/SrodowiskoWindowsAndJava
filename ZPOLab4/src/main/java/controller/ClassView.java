@@ -46,7 +46,6 @@ public class ClassView {
             setErrorLabel("Sukces!");
             className=inputClassName.getText();
             changeView();
-
         }else{
             setErrorLabel("Nie istnieje klasa o zadanej nazwie");
         }
