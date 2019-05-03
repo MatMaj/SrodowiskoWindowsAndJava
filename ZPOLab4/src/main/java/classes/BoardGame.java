@@ -25,7 +25,12 @@ public class BoardGame {
     }
 
     public String playGame(){
-        return "Players are playing game named: " + gameName;
+        if(gameName.equals("")){
+            return "There is no game to be played!";
+        }else {
+
+            return "Players are playing game named: " + gameName;
+        }
     }
     public String rollTheDice(){
         int random = (int )(Math.random() * 6 + 1);

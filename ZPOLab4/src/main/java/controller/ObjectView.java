@@ -3,13 +3,11 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +50,22 @@ public class ObjectView {
         if(fieldName.getText().equals("")||value.getText().equals("")){
             fieldInfo.setText("Field name or value are empty! Fill empty fields!");
         }else{
+            Method method;
             String setterName=takeSetter(fieldName.getText());
+            try {
+                method=gameClass.getClass().getMethod(setterName);
+                method.invoke(gameClass);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
             //gameClass.getClass().
 //            System.out.println(takeSetter(fieldName.getText()));
         }
+        setGetterFields();
 
     }
     String takeSetter(String field){
@@ -116,7 +126,6 @@ public class ObjectView {
 
     void getAllMethods(){
         Method[] method = gameClass.getClass().getDeclaredMethods();
-        int i=0;
         for(Method m:method){
             if(!(m.getName().startsWith("get")||m.getName().startsWith("set"))){
                 methodList.add(m.getName());
