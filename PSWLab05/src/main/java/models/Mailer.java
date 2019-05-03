@@ -12,8 +12,8 @@ public class Mailer {
     private Properties properties = new Properties();
     private Session session = provideSession();
 
-    private String message = "Witaj w aplikacji";
-    private String subject = "Rejestracja app laby";
+    private String message = "Witaj w aplikacji! ♥";
+    private String subject = "Rejestracja do aplikacji \n by Jakub Melkowski oraz Mateusz Majewski";
 
     public Mailer(String username, String password, String fromEmail){
         this.username = username;

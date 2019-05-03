@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class UserViewController {
     private FadeTransition fadeOut = new FadeTransition(Duration.millis(5400));
-    private String userName = "test1";
 
     public void initialize(){
         setupFadeOut();

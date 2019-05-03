@@ -105,16 +105,9 @@ public class AppController {
             addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
         } else if (activeScene){
             addToInfoLabel("Istnieje aktywne okno z zalogowanym użytkownikiem.", Color.DARKGOLDENROD);
-        } else if (login.equals("") || password.equals("")) {
+        } else if (!checkIfEveryFieldIsFilled(login, password)) {
             addToInfoLabel("Pola muszą być wypełnione.", Color.RED);
         } else {
-            login = loginLoginField.getText();
-            if (loginShowPassword.isSelected()) {
-                password = loginPasswordTextField.getText();
-            } else {
-                password = loginPasswordField.getText();
-            }
-
             Optional<User> user = userDAO.loginUser(login, password);
             if (!user.isPresent()) {
                 addToInfoLabel("Błędne hasło lub login.", Color.RED);
@@ -153,11 +146,12 @@ public class AppController {
         String passwordRepeat = regRepeatPasswordField.getText();
         if(!checkConnection()){
             addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
-        } else if (login.equals("") || password.equals("") || passwordRepeat.equals("") || email.equals("")
-                || name.equals("") || secondName.equals("")) {
+        } else if (!checkIfEveryFieldIsFilled(name, secondName, email, login, password, passwordRepeat)) {
             addToInfoLabel("Wszystkie pola muszą być wypełnione.", Color.RED);
         } else if (!passwordRepeat.equals(password)) {
-            addToInfoLabel("Hasła różią się!", Color.RED);
+            addToInfoLabel("Hasła różnią się!", Color.RED);
+        } else if (checkEmailCorrectness(email)){
+            addToInfoLabel("Email nie jest poprawny!", Color.RED);
         } else if (userDAO.checkLogin(login)) {
             addToInfoLabel("Istnieje już użytkownik o takim loginie - zmień login!", Color.RED);
         } else if (userDAO.checkEmail(email)) {
@@ -195,17 +189,33 @@ public class AppController {
     @FXML
     void checkEmail(KeyEvent event) {
         String email = regEmailField.getText().trim();
-        String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
 
-        if (!matcher.matches() && !email.equals("")) {
-            addToInfoLabel("Niepoprawny format email", Color.RED);
+        if (checkEmailCorrectness(email)) {
+            addToInfoLabel("Niepoprawny email", Color.RED);
             regEmailField.setStyle("-fx-background-color: rgba(255,0,0,0.5); -fx-border-color: rgba(255,0,0,0.75); -fx-border-radius: 3px;");
         } else {
             endInfoLabelFadeOut();
             regEmailField.setStyle("-fx-background-color: white; -fx-border-color: #B5B5B5; -fx-border-radius: 3px;");
         }
+    }
+
+    private boolean checkEmailCorrectness(String email){
+        String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+
+        return !matcher.matches() && !email.equals("");
+    }
+
+    private boolean checkIfEveryFieldIsFilled(String... fields) {
+        boolean isEveryFieldFilled = true;
+        for (String f : fields){
+            if (f.equals("")){
+                isEveryFieldFilled = false;
+                break;
+            }
+        }
+        return isEveryFieldFilled;
     }
 
     private boolean checkConnection(){

@@ -13,7 +13,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/appLoginView.fxml"));
         Parent root = (Parent)fxmlLoader.load();
 
-        primaryStage.setTitle("LOGIN APP");
+        primaryStage.setTitle("Aplikacja logująca");
         primaryStage.setScene(new Scene(root));
         primaryStage.getScene().getStylesheets().add("/style.css");
         primaryStage.setResizable(false);
