@@ -19,7 +19,11 @@ public class BoardGame {
         this.gameName = gameName;
     }
 
-    public void playGame(){
-        System.out.println("Players are playing game named: " + gameName);
+    public String playGame(){
+        return "Players are playing game named: " + gameName;
+    }
+    public String rollTheDice(){
+        int random = (int )(Math.random() * 6 + 1);
+        return "You rolled: "+random;
     }
 }

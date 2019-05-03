@@ -7,6 +7,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
 public class ObjectView {
     private String clName;
     private List<String> methodList = new ArrayList<String>();
+    private List<String> fieldList = new ArrayList<String>();
+    Method invokeMethod;
 
     private static Object gameClass = null;
     @FXML
@@ -24,6 +27,8 @@ public class ObjectView {
     private Label methodsFieldsNames;
     @FXML
     private TextField fieldName;
+    @FXML
+    private Label invokedMethodLabel;
     @FXML
     private TextField value;
     @FXML
@@ -41,10 +46,37 @@ public class ObjectView {
 
     @FXML
     void invokeMethod(ActionEvent event) {
+        if(methodName.getText().equals("")){
+            invokedMethodLabel.setText("Fill in method name!");
+        }else if(checkMethodExists(methodName.getText())==true){
+        try {
+            invokeMethod = gameClass.getClass().getMethod(methodName.getText());
+            invokeMethod.invoke(gameClass);
+            invokedMethodLabel.setText(invokeMethod.invoke(gameClass).toString());
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        }else{
+            invokedMethodLabel.setText("Method with this name does not exist in this class!");
+        }
 
     }
-    @FXML
-    void getFields(ActionEvent event) {
+
+    boolean checkMethodExists(String methodName){
+        boolean exists = false;
+        for(String m: methodList){
+            if(m.equals(methodName)){
+                exists= true;
+            }
+            else{
+                exists =false;
+            }
+        }
+        return exists;
     }
 
     void createClassObject(String ClassName){
@@ -59,15 +91,24 @@ public class ObjectView {
         }
     }
 
-    void getMethods(){
+    void getAllMethods(){
         Method[] method = gameClass.getClass().getDeclaredMethods();
         for(Method m:method){
-            methodList.add(m.getName());
+            if(!(m.getName().startsWith("get")||m.getName().startsWith("set"))){
+                methodList.add(m.getName());
+            }
+        }
+    }
+
+    void getAllFields(){
+        Field[] fields =gameClass.getClass().getDeclaredFields();
+        for(Field f: fields){
+            fieldList.add(f.getName());
         }
     }
 
     void setMethodView(){
-        getMethods();
+        getAllMethods();
         String methods="";
 
         for(String s:methodList){
@@ -76,7 +117,26 @@ public class ObjectView {
         methodsFieldsNames.setText(methods);
     }
 
-    void getFieldsWithGetters(){
-        
+    void setGetterFields(){
+
+        getterFieldsNames.setText("Pola: ");
+
+    }
+
+    void setSetterFields(){
+
+    }
+
+    public static boolean isGetter(Method method){
+        if(!method.getName().startsWith("get")) return false;
+        if(method.getParameterTypes().length != 0) return false;
+        if(void.class.equals(method.getReturnType())) return false;
+        return true;
+    }
+
+    public static boolean isSetter(Method method){
+        if(!method.getName().startsWith("set")) return false;
+        if(method.getParameterTypes().length != 1) return false;
+        return true;
     }
 }
