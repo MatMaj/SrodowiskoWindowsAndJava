@@ -8,11 +8,12 @@ import javafx.scene.control.TextField;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectView {
     private String clName;
-    private List methodList;
+    private List<String> methodList = new ArrayList<String>();
 
     private static Object gameClass = null;
     @FXML
@@ -30,8 +31,8 @@ public class ObjectView {
 
     public void initialize(){
         clName=ClassView.className;
-        System.out.println(clName);
         createClassObject(clName);
+        setMethodView();
     }
 
     @FXML
@@ -44,8 +45,6 @@ public class ObjectView {
     }
     @FXML
     void getFields(ActionEvent event) {
-        getMethods();
-        getterFieldsNames.setText(methodList.toString());
     }
 
     void createClassObject(String ClassName){
@@ -61,9 +60,23 @@ public class ObjectView {
     }
 
     void getMethods(){
-        Method[] method = gameClass.getClass().getMethods();
+        Method[] method = gameClass.getClass().getDeclaredMethods();
         for(Method m:method){
             methodList.add(m.getName());
         }
+    }
+
+    void setMethodView(){
+        getMethods();
+        String methods="";
+
+        for(String s:methodList){
+            methods += s + ", ";
+        }
+        methodsFieldsNames.setText(methods);
+    }
+
+    void getFieldsWithGetters(){
+        
     }
 }

@@ -3,6 +3,14 @@ package classes;
 public class BoardGame {
     public String gameName;
 
+    public BoardGame(){
+
+    }
+
+    public BoardGame(String gameName){
+        this.gameName = gameName;
+    }
+
     public String getGameName() {
         return gameName;
     }
