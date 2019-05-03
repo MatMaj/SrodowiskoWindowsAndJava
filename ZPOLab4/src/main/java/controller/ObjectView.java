@@ -38,6 +38,7 @@ public class ObjectView {
         clName=ClassView.className;
         createClassObject(clName);
         setMethodView();
+        setGetterSetterFields();
     }
 
     @FXML
@@ -93,6 +94,7 @@ public class ObjectView {
 
     void getAllMethods(){
         Method[] method = gameClass.getClass().getDeclaredMethods();
+        int i=0;
         for(Method m:method){
             if(!(m.getName().startsWith("get")||m.getName().startsWith("set"))){
                 methodList.add(m.getName());
@@ -117,19 +119,35 @@ public class ObjectView {
         methodsFieldsNames.setText(methods);
     }
 
-    void setGetterFields(){
-
-        getterFieldsNames.setText("Pola: ");
-
-    }
-
-    void setSetterFields(){
-
+    void setGetterSetterFields(){
+        Method[] methods = gameClass.getClass().getDeclaredMethods();
+        Field[] fields = gameClass.getClass().getDeclaredFields();
+        String methGet="";
+        String methSet="";
+        for(Method method : methods){
+            if(isGetter(method))
+                for(Field field: fields){
+                    String f="get"+field.getName().toLowerCase();
+                    if(method.getName().toLowerCase().equals(f)){
+                        methGet+=field.getName() + " " + field.getType().toString()+"\n";
+                    }
+                }
+            else if(isSetter(method)){
+                for(Field field: fields){
+                    String f="set"+field.getName().toLowerCase();
+                    if(method.getName().toLowerCase().equals(f)){
+                        methSet+=field.getName() + " " + field.getType().toString()+"\n";
+                    }
+                }
+            }
+        }
+        getterFieldsNames.setText(methGet);
+        setterFieldsNames.setText(methSet);
     }
 
     public static boolean isGetter(Method method){
-        if(!method.getName().startsWith("get")) return false;
-        if(method.getParameterTypes().length != 0) return false;
+        if(!method.getName().startsWith("get"))      return false;
+        if(method.getParameterTypes().length != 0)   return false;
         if(void.class.equals(method.getReturnType())) return false;
         return true;
     }

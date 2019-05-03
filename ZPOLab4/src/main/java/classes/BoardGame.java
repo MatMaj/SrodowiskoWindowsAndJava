@@ -2,6 +2,7 @@ package classes;
 
 public class BoardGame {
     public String gameName;
+    public int cube=1;
 
     public BoardGame(){
 
@@ -17,6 +18,10 @@ public class BoardGame {
 
     public void setGameName(String gameName) {
         this.gameName = gameName;
+    }
+
+    public int getCube() {
+        return cube;
     }
 
     public String playGame(){
