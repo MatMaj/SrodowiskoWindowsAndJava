@@ -83,8 +83,8 @@ public class ObjectView {
         }else if(checkMethodExists(methodName.getText())==true){
         try {
             invokeMethod = gameClass.getClass().getMethod(methodName.getText());
-            invokeMethod.invoke(gameClass);
-            invokedMethodLabel.setText(invokeMethod.invoke(gameClass).toString());
+            String result = invokeMethod.invoke(gameClass).toString();
+            invokedMethodLabel.setText(result);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

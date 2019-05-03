@@ -1,5 +1,7 @@
 package classes;
 
+import sun.invoke.empty.Empty;
+
 public class BoardGame {
     public String gameName;
     public int cube=1;
@@ -25,12 +27,7 @@ public class BoardGame {
     }
 
     public String playGame(){
-        if(gameName.equals("")){
-            return "There is no game to be played!";
-        }else {
-
-            return "Players are playing game named: " + gameName;
-        }
+        return "Players playing game named: " + gameName;
     }
     public String rollTheDice(){
         int random = (int )(Math.random() * 6 + 1);
