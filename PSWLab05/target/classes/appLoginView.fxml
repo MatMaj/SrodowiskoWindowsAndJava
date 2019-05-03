@@ -13,7 +13,7 @@
    <children>
       <AnchorPane layoutY="370.0" prefHeight="25.0" prefWidth="600.0" styleClass="info-pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Label fx:id="infoLabel" prefHeight="25.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <Label fx:id="infoLabel" prefHeight="25.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" />
          </children>
       </AnchorPane>
       <TabPane prefHeight="354.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -28,7 +28,7 @@
                          <TextField fx:id="loginPasswordTextField" layoutX="224.0" layoutY="166.0" />
                         <Label layoutX="136.0" layoutY="170.0" text="PASSWORD" />
                         <CheckBox fx:id="loginShowPassword" layoutX="228.0" layoutY="234.0" mnemonicParsing="false" onMouseClicked="#showPassword" text="SHOW PASSWORD" />
-                        <Button fx:id="logon" layoutX="272.0" layoutY="288.0" mnemonicParsing="false" onAction="#loginLogin" text="LOGIN" />
+                        <Button fx:id="loginLoginButton" layoutX="272.0" layoutY="288.0" mnemonicParsing="false" onAction="#loginLogin" text="LOGIN" />
                      </children>
                   </AnchorPane>
             </content>
@@ -37,7 +37,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="262.0" layoutY="287.0" mnemonicParsing="false" onAction="#registerUser" text="REGISTER" />
+                        <Button fx:id="regRegButton" layoutX="262.0" layoutY="287.0" mnemonicParsing="false" onAction="#registerUser" text="REGISTER" />
                         <TextField fx:id="regNameField" layoutX="226.0" layoutY="46.0" />
                         <TextField fx:id="regSurnameField" layoutX="226.0" layoutY="85.0" />
                         <TextField fx:id="regEmailField" layoutX="224.0" layoutY="122.0" onKeyReleased="#checkEmail" />

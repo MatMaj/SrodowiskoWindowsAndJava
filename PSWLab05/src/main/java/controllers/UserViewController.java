@@ -22,9 +22,12 @@ public class UserViewController {
         setupEvents();
         addFoodTypes();
         addParticipantType();
-        addToInfoLabel("Elocha", Color.rgb(10,20,30));
+        //addToInfoLabel("Elocha", Color.rgb(10,20,30));
     }
 
+    public void setUserName(String userName){
+        topLabel.setText("Witaj " + userName + "!");
+    }
     @FXML
     private Label topLabel;
 
@@ -59,13 +62,13 @@ public class UserViewController {
         fadeOut.setAutoReverse(false);
     }
 
-    void addToInfoLabel(String text, Color color){
+     private void addToInfoLabel(String text, Color color){
         infoLabel.setText(text);
         infoLabel.setTextFill(color);
         infoLabel.setVisible(true);
         fadeOut.playFromStart();
     }
-    void endInfoLabelFadeOut(){
+    private void endInfoLabelFadeOut(){
         infoLabel.setVisible(false);
     }
 
