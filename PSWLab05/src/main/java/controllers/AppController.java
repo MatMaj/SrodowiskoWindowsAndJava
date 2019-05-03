@@ -150,7 +150,7 @@ public class AppController {
             addToInfoLabel("Wszystkie pola muszą być wypełnione.", Color.RED);
         } else if (!passwordRepeat.equals(password)) {
             addToInfoLabel("Hasła różnią się!", Color.RED);
-        } else if (checkEmailCorrectness(email)){
+        } else if (!checkEmailCorrectness(email)){
             addToInfoLabel("Email nie jest poprawny!", Color.RED);
         } else if (userDAO.checkLogin(login)) {
             addToInfoLabel("Istnieje już użytkownik o takim loginie - zmień login!", Color.RED);
@@ -190,7 +190,7 @@ public class AppController {
     void checkEmail(KeyEvent event) {
         String email = regEmailField.getText().trim();
 
-        if (checkEmailCorrectness(email)) {
+        if (!checkEmailCorrectness(email) && !email.equals("")) {
             addToInfoLabel("Niepoprawny email", Color.RED);
             regEmailField.setStyle("-fx-background-color: rgba(255,0,0,0.5); -fx-border-color: rgba(255,0,0,0.75); -fx-border-radius: 3px;");
         } else {
@@ -204,7 +204,7 @@ public class AppController {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
 
-        return !matcher.matches() && !email.equals("");
+        return matcher.matches();
     }
 
     private boolean checkIfEveryFieldIsFilled(String... fields) {
