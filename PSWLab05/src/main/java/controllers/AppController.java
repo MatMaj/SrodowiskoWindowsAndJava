@@ -47,16 +47,6 @@ public class AppController {
         fadeOut.setAutoReverse(false);
     }
 
-    private boolean checkConnection(){
-        if (!userDAO.checkConnection()){
-            disableLogin();
-            disableRegister();
-            return false;
-        }
-        return true;
-
-    }
-
     @FXML
     private TextField loginLoginField;
     @FXML
@@ -161,7 +151,7 @@ public class AppController {
         String login = regLoginField.getText().trim();
         String password = regPasswordField.getText();
         String passwordRepeat = regRepeatPasswordField.getText();
-        if(checkConnection()){
+        if(!checkConnection()){
             addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
         } else if (login.equals("") || password.equals("") || passwordRepeat.equals("") || email.equals("")
                 || name.equals("") || secondName.equals("")) {
@@ -216,6 +206,15 @@ public class AppController {
             endInfoLabelFadeOut();
             regEmailField.setStyle("-fx-background-color: white; -fx-border-color: #B5B5B5; -fx-border-radius: 3px;");
         }
+    }
+
+    private boolean checkConnection(){
+        if (!userDAO.checkConnection()){
+            disableLogin();
+            disableRegister();
+            return false;
+        }
+        return true;
     }
 
     private void addToInfoLabel(String text, Color color) {
