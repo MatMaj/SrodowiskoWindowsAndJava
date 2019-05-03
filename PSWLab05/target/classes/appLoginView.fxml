@@ -22,34 +22,34 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="330.0" prefWidth="600.0">
                      <children>
-                        <Label alignment="CENTER" layoutX="169.0" layoutY="99.0" text="LOGIN" />
+                        <Label alignment="CENTER" layoutX="187.0" layoutY="99.0" prefHeight="17.0" prefWidth="37.0" text="Login" />
                         <TextField fx:id="loginLoginField" layoutX="224.0" layoutY="95.0" />
                         <PasswordField fx:id="loginPasswordField" layoutX="224.0" layoutY="166.0" />
                          <TextField fx:id="loginPasswordTextField" layoutX="224.0" layoutY="166.0" />
-                        <Label layoutX="136.0" layoutY="170.0" text="PASSWORD" />
-                        <CheckBox fx:id="loginShowPassword" layoutX="228.0" layoutY="234.0" mnemonicParsing="false" onMouseClicked="#showPassword" text="SHOW PASSWORD" />
-                        <Button fx:id="loginLoginButton" layoutX="272.0" layoutY="288.0" mnemonicParsing="false" onAction="#loginLogin" text="LOGIN" />
+                        <Label layoutX="191.0" layoutY="170.0" prefHeight="17.0" prefWidth="37.0" text="Hasło" />
+                        <CheckBox fx:id="loginShowPassword" layoutX="256.0" layoutY="235.0" mnemonicParsing="false" onMouseClicked="#showPassword" text="Pokaż hasło" />
+                        <Button fx:id="loginLoginButton" layoutX="261.0" layoutY="286.0" mnemonicParsing="false" onAction="#loginLogin" text="Zaloguj się" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="REGISTER">
+          <Tab text="REJESTRACJA">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="regRegButton" layoutX="262.0" layoutY="287.0" mnemonicParsing="false" onAction="#registerUser" text="REGISTER" />
+                        <Button fx:id="regRegButton" layoutX="254.0" layoutY="281.0" mnemonicParsing="false" onAction="#registerUser" text="Zarejestruj się" />
                         <TextField fx:id="regNameField" layoutX="226.0" layoutY="46.0" />
                         <TextField fx:id="regSurnameField" layoutX="226.0" layoutY="85.0" />
                         <TextField fx:id="regEmailField" layoutX="224.0" layoutY="122.0" onKeyReleased="#checkEmail" />
                         <TextField fx:id="regLoginField" layoutX="224.0" layoutY="159.0" />
                         <PasswordField fx:id="regPasswordField" layoutX="224.0" layoutY="195.0" onKeyReleased="#checkPassword" />
-                        <Label layoutX="174.0" layoutY="50.0" text="NAME:" />
-                        <Label layoutX="150.0" layoutY="89.0" text="SURNAME:" />
-                        <Label layoutX="173.0" layoutY="126.0" text="EMAIL:" />
+                        <Label layoutX="200.0" layoutY="50.0" text="Imię" />
+                        <Label layoutX="173.0" layoutY="89.0" text="Naziwsko" />
+                        <Label layoutX="193.0" layoutY="126.0" prefHeight="17.0" prefWidth="33.0" text="Email" />
                         <PasswordField fx:id="regRepeatPasswordField" layoutX="224.0" layoutY="230.0" onKeyReleased="#checkRepeatPassword" />
-                        <Label layoutX="173.0" layoutY="163.0" text="LOGIN:" />
-                        <Label layoutX="137.0" layoutY="199.0" text="PASSWORD:" />
-                        <Label layoutX="92.0" layoutY="234.0" text="REPEATPASSWORD:" />
+                        <Label layoutX="191.0" layoutY="163.0" prefHeight="17.0" prefWidth="34.0" text="Login" />
+                        <Label layoutX="190.0" layoutY="199.0" prefHeight="17.0" prefWidth="34.0" text="Hasło" />
+                        <Label layoutX="144.0" layoutY="234.0" prefHeight="17.0" prefWidth="79.0" text="Powtórz hasło" />
                      </children>
                   </AnchorPane>
             </content>

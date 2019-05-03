@@ -28,12 +28,14 @@ public class AppController {
     private boolean activeScene = false;
     private Mailer mailer = new Mailer("javawindowslab", "j@vawindows123", "javawindowslab@gmail.com");
     private UserDAOImpl userDAO = new UserDAOImpl();
-    private int counter = 0;
+    private int loginCounter = 0;
 
     @FXML
     public void initialize() {
         setupFadeOut();
-        checkConnection();
+        if(!checkConnection()){
+            addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
+        }
         loginPasswordTextField.setVisible(false);
     }
 
@@ -45,12 +47,13 @@ public class AppController {
         fadeOut.setAutoReverse(false);
     }
 
-    private void checkConnection(){
+    private boolean checkConnection(){
         if (!userDAO.checkConnection()){
-            addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.RED);
             disableLogin();
             disableRegister();
+            return false;
         }
+        return true;
 
     }
 
@@ -100,9 +103,21 @@ public class AppController {
 
     @FXML
     void loginLogin(ActionEvent event) {
-        String login;
+        String login = loginLoginField.getText().trim();
         String password;
-        if (!activeScene) {
+        if (loginShowPassword.isSelected()) {
+            password = loginPasswordTextField.getText();
+        } else {
+            password = loginPasswordField.getText();
+        }
+
+        if(!checkConnection()) {
+            addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
+        } else if (activeScene){
+            addToInfoLabel("Istnieje aktywne okno z zalogowanym użytkownikiem.", Color.DARKGOLDENROD);
+        } else if (login.equals("") || password.equals("")) {
+            addToInfoLabel("Pola muszą być wypełnione.", Color.RED);
+        } else {
             login = loginLoginField.getText();
             if (loginShowPassword.isSelected()) {
                 password = loginPasswordTextField.getText();
@@ -110,30 +125,19 @@ public class AppController {
                 password = loginPasswordField.getText();
             }
 
-            if (login.equals("") || password.equals("")) {
-                addToInfoLabel("Puste pole login lub hasło", Color.RED);
+            Optional<User> user = userDAO.loginUser(login, password);
+            if (!user.isPresent()) {
+                addToInfoLabel("Błędne hasło lub login.", Color.RED);
+                loginCounter++;
             } else {
-                if (!userDAO.checkLogin(login)) {
-                    addToInfoLabel("Błędne hasło lub login", Color.RED);
-                    counter++;
-                } else {
-                    Optional<User> user = userDAO.loginUser(login, password);
-                    if (!user.isPresent()) {
-                        addToInfoLabel("Błędne hasło lub login", Color.RED);
-                        counter++;
-                    } else {
-                        successfulLogin(user.get().getRights(), user.get().getName());
-                        counter = 0;
-                    }
-                }
+                successfulLogin(user.get().getRights(), user.get().getName());
+                loginCounter = 0;
             }
-        } else {
-            addToInfoLabel("Istnieje aktywne okno z zalogowanym użytkownikiem", Color.DARKGOLDENROD);
-        }
 
-        if (counter == 3) {
-            disableLogin();
-            addToInfoLabel("Trzykrotnie źle wpisane hasło - blokada logowania", Color.DARKRED);
+            if (loginCounter == 3) {
+                disableLogin();
+                addToInfoLabel("Trzykrotnie źle wpisane hasło - blokada logowania!", Color.DARKRED);
+            }
         }
     }
 
@@ -144,9 +148,39 @@ public class AppController {
         } else if (rights.equals("User")) {
             createUserView(name);
         } else {
-            addToInfoLabel("Twoje konto nie ma dostępu do aplikacji", Color.YELLOW);
+            addToInfoLabel("Twoje konto nie ma dostępu do aplikacji.", Color.YELLOW);
         }
         resetLoginView();
+    }
+
+    @FXML
+    void registerUser(ActionEvent event) {
+        String name = regNameField.getText().trim();
+        String secondName = regSurnameField.getText().trim();
+        String email = regEmailField.getText().trim();
+        String login = regLoginField.getText().trim();
+        String password = regPasswordField.getText();
+        String passwordRepeat = regRepeatPasswordField.getText();
+        if(checkConnection()){
+            addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
+        } else if (login.equals("") || password.equals("") || passwordRepeat.equals("") || email.equals("")
+                || name.equals("") || secondName.equals("")) {
+            addToInfoLabel("Wszystkie pola muszą być wypełnione.", Color.RED);
+        } else if (!passwordRepeat.equals(password)) {
+            addToInfoLabel("Hasła różią się!", Color.RED);
+        } else if (userDAO.checkLogin(login)) {
+            addToInfoLabel("Istnieje już użytkownik o takim loginie - zmień login!", Color.RED);
+        } else if (userDAO.checkEmail(email)) {
+            addToInfoLabel("Istnieje już użytkownik o zadanym emailu - zmień email!", Color.RED);
+        } else {
+            if(!userDAO.registerUser(name, secondName, email, login, password).equals(Boolean.TRUE)){
+                addToInfoLabel("Coś poszło nie tak, spróbuj jeszcze raz za chwilę!", Color.RED);
+            } else {
+                mailer.sendMail(email);
+                resetRegisterView();
+                addToInfoLabel("Pomyślnie zarejestrowano!", Color.GREEN);
+            }
+        }
     }
 
     @FXML
@@ -170,7 +204,7 @@ public class AppController {
 
     @FXML
     void checkEmail(KeyEvent event) {
-        String email = regEmailField.getText();
+        String email = regEmailField.getText().trim();
         String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
@@ -184,46 +218,6 @@ public class AppController {
         }
     }
 
-    @FXML
-    void registerUser(ActionEvent event) {
-        String name = regNameField.getText().trim();
-        String secondName = regSurnameField.getText().trim();
-        String email = regEmailField.getText().trim();
-        String login = regLoginField.getText().trim();
-        String password = regPasswordField.getText().trim();
-        String passwordRepeat = regRepeatPasswordField.getText().trim();
-
-        if (login.equals("") || password.equals("") || passwordRepeat.equals("") || email.equals("")
-                || name.equals("") || secondName.equals("")) {
-            addToInfoLabel("Wszystkie pola muszą być wypełnione", Color.RED);
-        } else {
-            try {
-                if (!regPasswordField.getText().equals(regRepeatPasswordField.getText())) {
-                    addToInfoLabel("Hasła różią się!", Color.RED);
-                } else {
-                    if (userDAO.checkLogin(login)) {
-                        addToInfoLabel("Istnieje już użytkownik o takim loginie! Zmień login", Color.RED);
-                    } else {
-                        if (userDAO.checkEmail(email)) {
-                            addToInfoLabel("Istnieje już użytkownik o zadanym emailu! Zmień email", Color.RED);
-                        } else {
-                            if(!userDAO.registerUser(name, secondName, email, login, password).equals(Boolean.TRUE)){
-                                addToInfoLabel("Coś poszło nie tak, spróbuj jeszcze raz za chwilę", Color.RED);
-                            } else {
-                                mailer.sendMail(email);
-                                resetRegisterView();
-                                addToInfoLabel("Pomyślnie zarejestrowano!", Color.GREEN);
-                            }
-                        }
-                    }
-
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
     private void addToInfoLabel(String text, Color color) {
         infoLabel.setText(text);
         infoLabel.setTextFill(color);
@@ -233,10 +227,6 @@ public class AppController {
 
     private void endInfoLabelFadeOut() {
         infoLabel.setVisible(false);
-    }
-
-    private void disableActiveScene(WindowEvent event) {
-        activeScene = false;
     }
 
     private void createUserView(String name) {
@@ -282,6 +272,10 @@ public class AppController {
     private void disableRegister() {
         regRegButton.setDisable(true);
         resetRegisterView();
+    }
+
+    private void disableActiveScene(WindowEvent event) {
+        activeScene = false;
     }
 
     private void resetLoginView() {
