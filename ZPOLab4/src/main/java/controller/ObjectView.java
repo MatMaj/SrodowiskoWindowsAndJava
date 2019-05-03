@@ -9,12 +9,14 @@ import javafx.scene.control.TextField;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectView {
     private String clName;
     private List<String> methodList = new ArrayList<String>();
+    private List<String> methodListFull = new ArrayList<String>();
     private List<String> fieldList = new ArrayList<String>();
     Method invokeMethod;
 
@@ -33,16 +35,35 @@ public class ObjectView {
     private TextField value;
     @FXML
     private TextField methodName;
+    @FXML
+    private Label fieldInfo;
 
     public void initialize(){
         clName=ClassView.className;
         createClassObject(clName);
+        getAllFields();
         setMethodView();
-        setGetterSetterFields();
+        setGetterFields();
+        setSetterFields();
     }
 
     @FXML
     void fillField(ActionEvent event) {
+        if(fieldName.getText().equals("")||value.getText().equals("")){
+            fieldInfo.setText("Field name or value are empty! Fill empty fields!");
+        }else{
+            String setterName=takeSetter(fieldName.getText());
+            //gameClass.getClass().
+//            System.out.println(takeSetter(fieldName.getText()));
+        }
+
+    }
+    String takeSetter(String field){
+        String setterName="";
+        for(String f: methodListFull){
+            if(("set"+field).toLowerCase().equals(f.toLowerCase())) setterName = f;
+        }
+        return setterName;
     }
 
     @FXML
@@ -64,7 +85,7 @@ public class ObjectView {
         }else{
             invokedMethodLabel.setText("Method with this name does not exist in this class!");
         }
-
+        setGetterFields();
     }
 
     boolean checkMethodExists(String methodName){
@@ -100,6 +121,7 @@ public class ObjectView {
             if(!(m.getName().startsWith("get")||m.getName().startsWith("set"))){
                 methodList.add(m.getName());
             }
+            methodListFull.add(m.getName());
         }
     }
 
@@ -120,20 +142,48 @@ public class ObjectView {
         methodsFieldsNames.setText(methods);
     }
 
-    void setGetterSetterFields(){
+    void setGetterFields(){
         Method[] methods = gameClass.getClass().getDeclaredMethods();
         Field[] fields = gameClass.getClass().getDeclaredFields();
         String methGet="";
-        String methSet="";
         for(Method method : methods){
             if(isGetter(method))
                 for(Field field: fields){
                     String f="get"+field.getName().toLowerCase();
                     if(method.getName().toLowerCase().equals(f)){
-                        methGet+="Field name: "+ field.getName() + " Field type: " + field.getType().toString()+"\n";
+                        methGet+="Field name: "+ field.getName() + " Field type: " + field.getType().toString()+
+                                " Value: "+getValue(field.getName())+"\n";
                     }
                 }
-            else if(isSetter(method)){
+        }
+        getterFieldsNames.setText(methGet);
+    }
+
+    String getValue(String fieldName){
+        String getterName="";
+        for(String f: methodListFull){
+            if(("get"+fieldName).toLowerCase().equals(f.toLowerCase())) getterName = f;
+        }
+        Method method;
+        String val="";
+        try {
+            method=gameClass.getClass().getMethod(getterName);
+            val = String.valueOf(method.invoke(gameClass));
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return val;
+    }
+    void setSetterFields(){
+        Method[] methods = gameClass.getClass().getDeclaredMethods();
+        Field[] fields = gameClass.getClass().getDeclaredFields();
+        String methSet="";
+        for(Method method : methods){
+            if(isSetter(method)){
                 for(Field field: fields){
                     String f="set"+field.getName().toLowerCase();
                     if(method.getName().toLowerCase().equals(f)){
@@ -142,7 +192,6 @@ public class ObjectView {
                 }
             }
         }
-        getterFieldsNames.setText(methGet);
         setterFieldsNames.setText(methSet);
     }
 

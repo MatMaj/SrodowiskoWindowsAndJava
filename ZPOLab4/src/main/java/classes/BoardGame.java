@@ -29,6 +29,7 @@ public class BoardGame {
     }
     public String rollTheDice(){
         int random = (int )(Math.random() * 6 + 1);
+        cube=random;
         return "You rolled: "+random;
     }
 }
