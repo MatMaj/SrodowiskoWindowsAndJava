@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,17 +54,31 @@ public class ObjectView {
             Method method;
             String setterName=takeSetter(fieldName.getText());
             try {
-                method=gameClass.getClass().getMethod(setterName);
-                method.invoke(gameClass);
+                Type typ = gameClass.getClass().getDeclaredField(fieldName.getText()).getType();
+                if(typ.toString().equals("int")){
+                    method = gameClass.getClass().getDeclaredMethod(setterName, int.class);
+                    method.invoke(gameClass, Integer.valueOf(value.getText()));
+                }else if(typ.toString().equals("class java.lang.String")){
+                    method = gameClass.getClass().getDeclaredMethod(setterName, String.class);
+                    method.invoke(gameClass, value.getText());
+                }else if(typ.toString().equals("double")){
+                    method = gameClass.getClass().getDeclaredMethod(setterName, double.class);
+                    method.invoke(gameClass, Double.parseDouble(value.getText()));
+                }else if(typ.toString().equals("class java.lang.Enum")){
+                    method = gameClass.getClass().getDeclaredMethod(setterName, Enum.class);
+                    method.invoke(gameClass, (value.getText()));
+                }else{
+                    fieldInfo.setText("Wrong field type");
+                }
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
+            } catch (NoSuchFieldException e){
+                e.printStackTrace();
             }
-            //gameClass.getClass().
-//            System.out.println(takeSetter(fieldName.getText()));
         }
         setGetterFields();
 
@@ -82,7 +97,8 @@ public class ObjectView {
             invokedMethodLabel.setText("Fill in method name!");
         }else if(checkMethodExists(methodName.getText())==true){
         try {
-            invokeMethod = gameClass.getClass().getMethod(methodName.getText());
+            invokeMethod = gameClass.getClass().getDeclaredMethod(methodName.getText());
+            invokeMethod.setAccessible(true);
             String result = invokeMethod.invoke(gameClass).toString();
             invokedMethodLabel.setText(result);
         } catch (NoSuchMethodException e) {
