@@ -15,7 +15,7 @@ public class Main extends Application {
 
         primaryStage.setTitle("Aplikacja logująca");
         primaryStage.setScene(new Scene(root));
-        primaryStage.getScene().getStylesheets().add("/style.css");
+        primaryStage.getScene().getStylesheets().add("/appLoginStyle.css");
         primaryStage.setResizable(false);
         primaryStage.show();
 

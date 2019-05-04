@@ -30,10 +30,9 @@ public class AppController {
     private UserDAOImpl userDAO = new UserDAOImpl();
     private int failedLoginCounter = 0;
 
-    @FXML
     public void initialize() {
         setupFadeOut();
-        if(!checkConnection()){
+        if (!checkConnection()) {
             addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
         }
         loginPasswordTextField.setVisible(false);
@@ -101,9 +100,9 @@ public class AppController {
             password = loginPasswordField.getText();
         }
 
-        if(!checkConnection()) {
+        if (!checkConnection()) {
             addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
-        } else if (activeScene){
+        } else if (activeScene) {
             addToInfoLabel("Istnieje aktywne okno z zalogowanym użytkownikiem.", Color.DARKGOLDENROD);
         } else if (!checkIfEveryFieldIsFilled(login, password)) {
             addToInfoLabel("Pola muszą być wypełnione.", Color.RED);
@@ -113,7 +112,7 @@ public class AppController {
                 addToInfoLabel("Błędne hasło lub login.", Color.RED);
                 failedLoginCounter++;
             } else {
-                successfulLogin(user.get().getRights(), user.get().getName());
+                successfulLogin(user.get().getRights(), user.get().getName(), login);
                 failedLoginCounter = 0;
             }
 
@@ -124,10 +123,10 @@ public class AppController {
         }
     }
 
-    private void successfulLogin(String rights, String name) {
+    private void successfulLogin(String rights, String name, String login) {
         addToInfoLabel("Logowanie powiodło się! Witamy!", Color.GREEN);
         if (rights.equals("Admin")) {
-            createAdminView();
+            createAdminView(login);
         } else if (rights.equals("User")) {
             createUserView(name);
         } else {
@@ -144,20 +143,20 @@ public class AppController {
         String login = regLoginField.getText().trim();
         String password = regPasswordField.getText();
         String passwordRepeat = regRepeatPasswordField.getText();
-        if(!checkConnection()){
+        if (!checkConnection()) {
             addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
         } else if (!checkIfEveryFieldIsFilled(name, surname, email, login, password, passwordRepeat)) {
             addToInfoLabel("Wszystkie pola muszą być wypełnione.", Color.RED);
         } else if (!passwordRepeat.equals(password)) {
             addToInfoLabel("Hasła różnią się!", Color.RED);
-        } else if (!checkEmailCorrectness(email)){
+        } else if (!checkEmailCorrectness(email)) {
             addToInfoLabel("Email nie jest poprawny!", Color.RED);
         } else if (userDAO.checkLogin(login)) {
             addToInfoLabel("Istnieje już użytkownik o takim loginie - zmień login!", Color.RED);
         } else if (userDAO.checkEmail(email)) {
             addToInfoLabel("Istnieje już użytkownik o zadanym emailu - zmień email!", Color.RED);
         } else {
-            if(!userDAO.registerUser(name, surname, email, login, password).equals(Boolean.TRUE)){
+            if (!userDAO.registerUser(name, surname, email, login, password).equals(Boolean.TRUE)) {
                 addToInfoLabel("Coś poszło nie tak, spróbuj jeszcze raz za chwilę!", Color.RED);
             } else {
                 mailer.sendMail(email);
@@ -199,7 +198,7 @@ public class AppController {
         }
     }
 
-    private boolean checkEmailCorrectness(String email){
+    private boolean checkEmailCorrectness(String email) {
         String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
@@ -209,8 +208,8 @@ public class AppController {
 
     private boolean checkIfEveryFieldIsFilled(String... fields) {
         boolean isEveryFieldFilled = true;
-        for (String f : fields){
-            if (f.equals("")){
+        for (String f : fields) {
+            if (f.equals("")) {
                 isEveryFieldFilled = false;
                 break;
             }
@@ -218,8 +217,8 @@ public class AppController {
         return isEveryFieldFilled;
     }
 
-    private boolean checkConnection(){
-        if (!userDAO.checkConnection()){
+    private boolean checkConnection() {
+        if (!userDAO.checkConnection()) {
             disableLogin();
             disableRegister();
             return false;
@@ -245,6 +244,7 @@ public class AppController {
             Stage userStage = new Stage();
             userStage.setTitle("Widok użytkownika " + name);
             userStage.setScene(new Scene(root3));
+            userStage.setResizable(false);
 
             UserViewController controller = fxmlLoader.getController();
             controller.setUserName(name);
@@ -257,13 +257,18 @@ public class AppController {
         }
     }
 
-    private void createAdminView() {
+    private void createAdminView(String login) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/adminView.fxml"));
             Parent root2 = fxmlLoader.load();
             Stage adminStage = new Stage();
             adminStage.setTitle("Admin");
             adminStage.setScene(new Scene(root2));
+            adminStage.getScene().getStylesheets().add("/adminStyle.css");
+            adminStage.setResizable(false);
+
+            AdminViewController controller = fxmlLoader.getController();
+            controller.setUserLogin(login);
             adminStage.show();
 
             activeScene = true;

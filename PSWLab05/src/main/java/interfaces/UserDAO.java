@@ -2,6 +2,7 @@ package interfaces;
 
 import models.User;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public interface UserDAO {
@@ -14,4 +15,16 @@ public interface UserDAO {
     Boolean checkEmail(String login);
 
     Boolean checkConnection();
+
+    Boolean deleteUser(Long id);
+
+    Boolean resetPassword(Long id, String password);
+
+    Boolean checkUserId(Long id);
+
+    ArrayList<User> getUsers();
+
+    Boolean addUser(User user);
+
+    User getNewestUser();
 }

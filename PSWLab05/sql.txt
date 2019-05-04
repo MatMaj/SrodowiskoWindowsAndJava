@@ -12,3 +12,12 @@ date date
 );
 INSERT INTO users VALUES(NULL,'Admin','Admin','Admin','admin','admin@admin.com','Admin',now());
 INSERT INTO users VALUES(NULL,'User','User','User','user','user@user.com','User',now());
+
+create table events (
+id int PRIMARY KEY auto_increment,
+name varchar(100),
+agenda varchar(100),
+date date
+);
+INSERT INTO events VALUES(NULL,'Zbieranie grzybów', 'Leśnicy Morscy', now());
+INSERT INTO events VALUES(NULL,'Odkurzanie piwnicy', 'Piwniczane Gosposie', now());

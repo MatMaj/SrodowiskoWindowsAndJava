@@ -1,0 +1,23 @@
+.tab-pane .tab-header-area {
+    -fx-padding: 0 0 0 23;
+}
+
+.tab-pane {
+    -fx-tab-min-width:270;
+}
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+}
+
+.text-field, .password-field {
+    -fx-background-color: white;
+    -fx-border-color: #B5B5B5;
+    -fx-border-radius: 3px;
+}
+
+.info-pane {
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: #B5B5B5;
+    -fx-background-color: #DDDDDD;
+}

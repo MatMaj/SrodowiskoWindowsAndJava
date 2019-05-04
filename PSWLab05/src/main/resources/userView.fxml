@@ -9,26 +9,26 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.UserViewController">
    <children>
+      <AnchorPane layoutX="-1.0" layoutY="380.0" prefHeight="25.0" prefWidth="600.0" styleClass="info-pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Label fx:id="infoLabel" prefHeight="20.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+         </children>
+      </AnchorPane>
       <Label fx:id="topLabel" layoutX="14.0" layoutY="14.0" prefHeight="34.0" prefWidth="183.0" text="Witaj użytkowniku!">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
       <Label layoutX="15.0" layoutY="53.0" text="Nazwa wydarzenia" />
-      <ComboBox fx:id="nameEvent" layoutX="14.0" layoutY="70.0" prefWidth="150.0" />
+      <ComboBox fx:id="nameComboBox" layoutX="14.0" layoutY="70.0" onAction="#selectEvent" prefWidth="150.0" />
       <Label layoutX="15.0" layoutY="114.0" text="Agenda" />
-      <TextField fx:id="agendaEvent" editable="false" layoutX="15.0" layoutY="131.0" />
+      <TextField fx:id="agendaField" editable="false" layoutX="15.0" layoutY="131.0" />
       <Label layoutX="14.0" layoutY="171.0" text="Termin" />
-      <TextField fx:id="dateEvent" editable="false" layoutX="15.0" layoutY="188.0" />
+      <TextField fx:id="dateField" editable="false" layoutX="15.0" layoutY="188.0" />
       <Label layoutX="14.0" layoutY="225.0" text="Typ uczestnictwa" />
-      <ComboBox fx:id="typeEvent" layoutX="15.0" layoutY="242.0" prefWidth="150.0" />
+      <ComboBox fx:id="participantTypeComboBox" layoutX="15.0" layoutY="242.0" prefWidth="150.0" />
       <Label layoutX="14.0" layoutY="280.0" text="Wyżywienie" />
-      <ComboBox fx:id="eatEvent" layoutX="14.0" layoutY="297.0" prefWidth="150.0" />
-      <Button layoutX="197.0" layoutY="297.0" mnemonicParsing="false" onAction="#addToEvent" text="Dodaj" />
-      <AnchorPane layoutX="-1.0" layoutY="380.0" prefHeight="25.0" prefWidth="600.0" styleClass="info-pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <children>
-            <Label fx:id="infoLabel" prefHeight="20.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-         </children>
-      </AnchorPane>
+      <ComboBox fx:id="foodTypeComboBox" layoutX="14.0" layoutY="297.0" prefWidth="150.0" />
+      <Button layoutX="197.0" layoutY="297.0" mnemonicParsing="false" onAction="#joinEvent" text="Dołącz" />
    </children>
 </AnchorPane>

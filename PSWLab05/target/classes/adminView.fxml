@@ -1,16 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AdminViewController">
    <children>
-      <Label layoutX="199.0" layoutY="155.0" text="ADMIN">
-         <font>
-            <Font size="62.0" />
-         </font>
-      </Label>
+      <AnchorPane layoutY="374.0" prefHeight="25.0" prefWidth="600.0" styleClass="info-pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="375.0">
+         <children>
+            <Label fx:id="infoLabel" prefHeight="25.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <TabPane layoutX="63.0" layoutY="27.0" prefHeight="374.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab fx:id="userTab" text="Użytkownik">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <AnchorPane layoutY="199.0" prefHeight="132.0" prefWidth="600.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="199.0">
+                           <children>
+                              <TextField fx:id="userIdTextField" layoutX="15.0" layoutY="36.0" prefHeight="25.0" prefWidth="126.0" styleClass="text-field" />
+                              <TextField fx:id="userLoginTextField" layoutX="14.0" layoutY="81.0" prefHeight="25.0" prefWidth="127.0" styleClass="text-field" />
+                              <TextField fx:id="userPasswordTextField" layoutX="154.0" layoutY="37.0" prefHeight="25.0" prefWidth="126.0" styleClass="text-field" />
+                              <TextField fx:id="userNameTextField" layoutX="154.0" layoutY="80.0" prefHeight="25.0" prefWidth="126.0" styleClass="text-field" />
+                              <TextField fx:id="userSurnameTextField" layoutX="324.0" layoutY="35.0" prefHeight="25.0" prefWidth="126.0" styleClass="text-field" />
+                              <TextField fx:id="userEmailTextField" layoutX="323.0" layoutY="80.0" onKeyReleased="#checkEmail" prefHeight="25.0" prefWidth="126.0" styleClass="text-field" />
+                              <TextField fx:id="userRightsTextField" layoutX="460.0" layoutY="34.0" prefHeight="25.0" prefWidth="126.0" styleClass="text-field" />
+                              <TextField fx:id="userDateTextField" layoutX="459.0" layoutY="79.0" onKeyReleased="#checkDateUser" prefHeight="25.0" prefWidth="126.0" promptText="YYYY-MM-DD" styleClass="text-field" />
+                              <Button layoutX="117.0" layoutY="119.0" mnemonicParsing="false" onAction="#addUser" text="Dodaj" />
+                              <Button layoutX="279.0" layoutY="119.0" mnemonicParsing="false" onAction="#deleteUser" text="Usuń" />
+                              <Button layoutX="422.0" layoutY="119.0" mnemonicParsing="false" onAction="#resetUserPassword" text="Reset hasła" />
+                              <Label layoutX="459.0" layoutY="62.0" text="Data" />
+                              <Label layoutX="15.0" layoutY="19.0" text="Id" />
+                              <Label layoutX="15.0" layoutY="64.0" text="Login" />
+                              <Label layoutX="460.0" layoutY="17.0" text="Prawa" />
+                              <Label layoutX="324.0" layoutY="18.0" text="Naziwsko" />
+                              <Label layoutX="324.0" layoutY="63.0" text="Email" />
+                              <Label layoutX="154.0" layoutY="20.0" text="Hasło" />
+                              <Label layoutX="154.0" layoutY="65.0" text="Imię" />
+                           </children>
+                        </AnchorPane>
+                        <TableView fx:id="userTableView" prefHeight="200.0" prefWidth="600.0" AnchorPane.bottomAnchor="145.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="col_user_id" prefWidth="36.0" text="id" />
+                              <TableColumn fx:id="col_user_login" prefWidth="75.0" text="login" />
+                              <TableColumn fx:id="col_user_password" prefWidth="98.0" text="password" />
+                            <TableColumn fx:id="col_user_name" prefWidth="71.0" text="name" />
+                              <TableColumn fx:id="col_user_surname" prefWidth="67.0" text="surname" />
+                              <TableColumn fx:id="col_user_email" prefWidth="97.0" text="email" />
+                              <TableColumn fx:id="col_user_rights" prefWidth="94.0" text="rights" />
+                              <TableColumn fx:id="col_user_date" prefWidth="61.0" text="date" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="eventTab" text="Wydarzenie">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="eventTableView" prefHeight="200.0" prefWidth="600.0" AnchorPane.bottomAnchor="145.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="col_event_id" prefWidth="62.0" text="id" />
+                            <TableColumn fx:id="col_event_name" prefWidth="241.0" text="name" />
+                              <TableColumn fx:id="col_event_agenda" prefWidth="193.0" text="agenda" />
+                              <TableColumn fx:id="col_event_date" prefWidth="103.0" text="date" />
+                          </columns>
+                        </TableView>
+                        <AnchorPane layoutY="200.0" prefHeight="146.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="199.0">
+                           <children>
+                              <Label layoutX="93.0" layoutY="17.0" text="Id" />
+                              <TextField fx:id="eventIdTextField" layoutX="93.0" layoutY="36.0" styleClass="text-field" />
+                              <TextField fx:id="eventNameTextField" layoutX="93.0" layoutY="84.0" styleClass="text-field" />
+                              <Label layoutX="93.0" layoutY="67.0" text="Nazwa" />
+                              <TextField fx:id="eventAgendaTextField" layoutX="256.0" layoutY="36.0" styleClass="text-field" />
+                              <TextField fx:id="eventDateTextField" layoutX="256.0" layoutY="84.0" onKeyReleased="#checkDateEvent" promptText="YYYY-MM-DD" styleClass="text-field" />
+                              <Label layoutX="256.0" layoutY="17.0" text="Agenda" />
+                              <Label layoutX="256.0" layoutY="67.0" text="Data" />
+                              <Button layoutX="447.0" layoutY="24.0" mnemonicParsing="false" onAction="#addEvent" text="Dodaj" />
+                              <Button layoutX="450.0" layoutY="63.0" mnemonicParsing="false" onAction="#deleteEvent" text="Usuń" />
+                              <Button layoutX="438.0" layoutY="104.0" mnemonicParsing="false" onAction="#modifyEvent" text="Modyfikuj" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="438.0" AnchorPane.rightAnchor="92.0" AnchorPane.topAnchor="104.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab fx:id="signTab" text="Zapisy">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="25.0" layoutY="43.0" prefWidth="214.0" text="Użytkownicy czekający na potwierdzenie" AnchorPane.bottomAnchor="285.0" />
+                        <ComboBox fx:id="signUsersComboBox" layoutX="24.0" layoutY="62.0" prefHeight="25.0" prefWidth="215.0" />
+                        <ComboBox fx:id="signEventComboBox" layoutX="25.0" layoutY="124.0" prefHeight="25.0" prefWidth="215.0" />
+                        <Label layoutX="25.0" layoutY="105.0" text="Wydarzenia użytkownika" AnchorPane.bottomAnchor="223.0" />
+                        <Button layoutX="24.0" layoutY="172.0" mnemonicParsing="false" onAction="#signAccept" text="Zatwierdź" />
+                        <Button layoutX="104.0" layoutY="172.0" mnemonicParsing="false" onAction="#signDeny" text="Usuń" />
+                        <Button layoutX="24.0" layoutY="215.0" mnemonicParsing="false" onAction="#signAcceptAll" text="Zatwiedź wszystkich" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>
