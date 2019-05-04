@@ -9,12 +9,12 @@ import java.util.Optional;
 public class UserDAOImpl implements UserDAO {
     private Boolean isSuccessful;
 
-    public Boolean registerUser(String name, String secondName, String email, String login, String password) {
+    public Boolean registerUser(String name, String surname, String email, String login, String password) {
         isSuccessful = true;
         try (Connection connection = getConnection()){
-            Statement statement = connection.prepareStatement("INSERT INTO userdatabase " + "VALUES (NULL,?,?,?,?,?,'User',NOW())");
+            Statement statement = connection.prepareStatement("INSERT INTO users " + "VALUES (NULL,?,?,?,?,?,'User',NOW())");
             ((PreparedStatement) statement).setString(1, name);
-            ((PreparedStatement) statement).setString(2, secondName);
+            ((PreparedStatement) statement).setString(2, surname);
             ((PreparedStatement) statement).setString(3, login);
             ((PreparedStatement) statement).setString(4, password);
             ((PreparedStatement) statement).setString(5, email);
@@ -30,15 +30,15 @@ public class UserDAOImpl implements UserDAO {
     public Optional<User> loginUser(String login, String password){
         Optional<User> user = Optional.empty();
         try (Connection connection = getConnection()) {
-            Statement statement = connection.prepareStatement("SELECT * FROM userdatabase WHERE login=? AND haslo=?");
+            Statement statement = connection.prepareStatement("SELECT * FROM users WHERE login=? AND password=?");
             ((PreparedStatement) statement).setString(1, login);
             ((PreparedStatement) statement).setString(2, password);
             ResultSet resultSet = ((PreparedStatement) statement).executeQuery();
             if (resultSet.isBeforeFirst()){
                 resultSet.next();
                 user = Optional.of(new User(resultSet.getString("name"),
-                                resultSet.getString("secoundName"),
-                                resultSet.getString("uprawnienia")));
+                                resultSet.getString("surname"),
+                                resultSet.getString("rights")));
             }
         } catch(SQLException e) {
             e.printStackTrace();
@@ -50,7 +50,7 @@ public class UserDAOImpl implements UserDAO {
     public Boolean checkLogin(String login){
         isSuccessful = true;
         try (Connection connection = getConnection()) {
-            Statement statement = connection.prepareStatement("SELECT * FROM userdatabase WHERE login=?");
+            Statement statement = connection.prepareStatement("SELECT * FROM users WHERE login=?");
             ((PreparedStatement) statement).setString(1, login);
             ResultSet resultSet = ((PreparedStatement) statement).executeQuery();
             if (resultSet.isBeforeFirst()){
@@ -68,7 +68,7 @@ public class UserDAOImpl implements UserDAO {
     public Boolean checkEmail(String email){
         isSuccessful = true;
         try (Connection connection = getConnection()){
-            Statement statement = connection.prepareStatement("SELECT * FROM userdatabase WHERE email=?");
+            Statement statement = connection.prepareStatement("SELECT * FROM users WHERE email=?");
             ((PreparedStatement) statement).setString(1, email);
             ResultSet resultSet = ((PreparedStatement) statement).executeQuery();
             if (resultSet.isBeforeFirst()){

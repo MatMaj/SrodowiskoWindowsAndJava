@@ -28,7 +28,7 @@ public class AppController {
     private boolean activeScene = false;
     private Mailer mailer = new Mailer("javawindowslab", "j@vawindows123", "javawindowslab@gmail.com");
     private UserDAOImpl userDAO = new UserDAOImpl();
-    private int loginCounter = 0;
+    private int failedLoginCounter = 0;
 
     @FXML
     public void initialize() {
@@ -111,13 +111,13 @@ public class AppController {
             Optional<User> user = userDAO.loginUser(login, password);
             if (!user.isPresent()) {
                 addToInfoLabel("Błędne hasło lub login.", Color.RED);
-                loginCounter++;
+                failedLoginCounter++;
             } else {
                 successfulLogin(user.get().getRights(), user.get().getName());
-                loginCounter = 0;
+                failedLoginCounter = 0;
             }
 
-            if (loginCounter == 3) {
+            if (failedLoginCounter == 3) {
                 disableLogin();
                 addToInfoLabel("Trzykrotnie źle wpisane hasło - blokada logowania!", Color.DARKRED);
             }
@@ -126,7 +126,7 @@ public class AppController {
 
     private void successfulLogin(String rights, String name) {
         addToInfoLabel("Logowanie powiodło się! Witamy!", Color.GREEN);
-        if (rights.equals("Administrator")) {
+        if (rights.equals("Admin")) {
             createAdminView();
         } else if (rights.equals("User")) {
             createUserView(name);
@@ -139,14 +139,14 @@ public class AppController {
     @FXML
     void registerUser(ActionEvent event) {
         String name = regNameField.getText().trim();
-        String secondName = regSurnameField.getText().trim();
+        String surname = regSurnameField.getText().trim();
         String email = regEmailField.getText().trim();
         String login = regLoginField.getText().trim();
         String password = regPasswordField.getText();
         String passwordRepeat = regRepeatPasswordField.getText();
         if(!checkConnection()){
             addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
-        } else if (!checkIfEveryFieldIsFilled(name, secondName, email, login, password, passwordRepeat)) {
+        } else if (!checkIfEveryFieldIsFilled(name, surname, email, login, password, passwordRepeat)) {
             addToInfoLabel("Wszystkie pola muszą być wypełnione.", Color.RED);
         } else if (!passwordRepeat.equals(password)) {
             addToInfoLabel("Hasła różnią się!", Color.RED);
@@ -157,7 +157,7 @@ public class AppController {
         } else if (userDAO.checkEmail(email)) {
             addToInfoLabel("Istnieje już użytkownik o zadanym emailu - zmień email!", Color.RED);
         } else {
-            if(!userDAO.registerUser(name, secondName, email, login, password).equals(Boolean.TRUE)){
+            if(!userDAO.registerUser(name, surname, email, login, password).equals(Boolean.TRUE)){
                 addToInfoLabel("Coś poszło nie tak, spróbuj jeszcze raz za chwilę!", Color.RED);
             } else {
                 mailer.sendMail(email);

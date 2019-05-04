@@ -1,0 +1,14 @@
+create schema loginapp;
+use loginapp;
+create table users (
+id int PRIMARY KEY auto_increment,
+name varchar(100),
+surname varchar(100),
+login varchar(100),
+password varchar(100),
+email varchar(100),
+rights varchar(100),
+date date
+);
+INSERT INTO users VALUES(NULL,'Admin','Admin','Admin','admin','admin@admin.com','Admin',now());
+INSERT INTO users VALUES(NULL,'User','User','User','user','user@user.com','User',now());
