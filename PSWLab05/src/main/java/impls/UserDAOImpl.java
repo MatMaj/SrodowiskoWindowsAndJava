@@ -10,6 +10,7 @@ import java.util.Optional;
 public class UserDAOImpl implements UserDAO {
     private Boolean isSuccessful;
 
+    @Override
     public Boolean registerUser(String name, String surname, String email, String login, String password) {
         isSuccessful = true;
         try (Connection connection = getConnection()) {
@@ -28,6 +29,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public Optional<User> loginUser(String login, String password) {
         Optional<User> user = Optional.empty();
         try (Connection connection = getConnection()) {
@@ -37,7 +39,8 @@ public class UserDAOImpl implements UserDAO {
             ResultSet resultSet = ((PreparedStatement) statement).executeQuery();
             if (resultSet.isBeforeFirst()) {
                 resultSet.next();
-                user = Optional.of(new User(resultSet.getString("name"),
+                user = Optional.of(new User(resultSet.getLong("id"),
+                        resultSet.getString("name"),
                         resultSet.getString("surname"),
                         resultSet.getString("rights")));
             }
@@ -48,6 +51,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public Boolean checkLogin(String login) {
         isSuccessful = false;
         try (Connection connection = getConnection()) {
@@ -64,6 +68,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public Boolean checkEmail(String email) {
         isSuccessful = false;
         try (Connection connection = getConnection()) {
@@ -80,6 +85,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public Boolean checkUserId(Long id) {
         isSuccessful = false;
         try (Connection connection = getConnection()){
@@ -96,6 +102,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public Boolean checkConnection() {
         isSuccessful = false;
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX")) {
@@ -107,6 +114,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public Boolean deleteUser(Long id) {
         isSuccessful = true;
         try (Connection connection = getConnection()) {
@@ -121,6 +129,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public Boolean resetPassword(Long id, String password) {
         isSuccessful = true;
         try (Connection connection = getConnection()) {
@@ -136,6 +145,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<>();
         try (Connection connection = getConnection()) {
@@ -159,6 +169,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public Boolean addUser(User user) {
         isSuccessful = true;
         try (Connection connection = getConnection()) {
@@ -179,6 +190,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public User getNewestUser() {
         User user = null;
         try (Connection connection = getConnection()) {

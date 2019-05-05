@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -17,13 +16,13 @@
             <Label fx:id="infoLabel" prefHeight="25.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
-      <TabPane layoutX="63.0" layoutY="27.0" prefHeight="374.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane layoutX="63.0" layoutY="27.0" prefHeight="374.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab fx:id="userTab" text="Użytkownik">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <AnchorPane layoutY="199.0" prefHeight="132.0" prefWidth="600.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="199.0">
+                        <AnchorPane layoutY="199.0" prefHeight="132.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="199.0">
                            <children>
                               <TextField fx:id="userIdTextField" layoutX="15.0" layoutY="36.0" prefHeight="25.0" prefWidth="126.0" styleClass="text-field" />
                               <TextField fx:id="userLoginTextField" layoutX="14.0" layoutY="81.0" prefHeight="25.0" prefWidth="127.0" styleClass="text-field" />
@@ -44,6 +43,7 @@
                               <Label layoutX="324.0" layoutY="63.0" text="Email" />
                               <Label layoutX="154.0" layoutY="20.0" text="Hasło" />
                               <Label layoutX="154.0" layoutY="65.0" text="Imię" />
+                              <Button layoutX="14.0" layoutY="119.0" mnemonicParsing="false" onAction="#clearUser" text="C" />
                            </children>
                         </AnchorPane>
                         <TableView fx:id="userTableView" prefHeight="200.0" prefWidth="600.0" AnchorPane.bottomAnchor="145.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -86,7 +86,8 @@
                               <Label layoutX="256.0" layoutY="67.0" text="Data" />
                               <Button layoutX="447.0" layoutY="24.0" mnemonicParsing="false" onAction="#addEvent" text="Dodaj" />
                               <Button layoutX="450.0" layoutY="63.0" mnemonicParsing="false" onAction="#deleteEvent" text="Usuń" />
-                              <Button layoutX="438.0" layoutY="104.0" mnemonicParsing="false" onAction="#modifyEvent" text="Modyfikuj" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="438.0" AnchorPane.rightAnchor="92.0" AnchorPane.topAnchor="104.0" />
+                              <Button layoutX="437.0" layoutY="97.0" mnemonicParsing="false" onAction="#modifyEvent" text="Modyfikuj" />
+                              <Button layoutX="14.0" layoutY="110.0" mnemonicParsing="false" onAction="#clearEvent" text="C" />
                            </children>
                         </AnchorPane>
                      </children>
@@ -97,13 +98,33 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label layoutX="25.0" layoutY="43.0" prefWidth="214.0" text="Użytkownicy czekający na potwierdzenie" AnchorPane.bottomAnchor="285.0" />
-                        <ComboBox fx:id="signUsersComboBox" layoutX="24.0" layoutY="62.0" prefHeight="25.0" prefWidth="215.0" />
-                        <ComboBox fx:id="signEventComboBox" layoutX="25.0" layoutY="124.0" prefHeight="25.0" prefWidth="215.0" />
-                        <Label layoutX="25.0" layoutY="105.0" text="Wydarzenia użytkownika" AnchorPane.bottomAnchor="223.0" />
-                        <Button layoutX="24.0" layoutY="172.0" mnemonicParsing="false" onAction="#signAccept" text="Zatwierdź" />
-                        <Button layoutX="104.0" layoutY="172.0" mnemonicParsing="false" onAction="#signDeny" text="Usuń" />
-                        <Button layoutX="24.0" layoutY="215.0" mnemonicParsing="false" onAction="#signAcceptAll" text="Zatwiedź wszystkich" />
+                        <TableView fx:id="userEventTableView" layoutX="4.0" prefHeight="199.0" prefWidth="600.0" AnchorPane.bottomAnchor="147.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="col_userEvent_userId" prefWidth="92.0" text="user_id" />
+                            <TableColumn fx:id="col_userEvent_eventId" prefWidth="84.0" text="event_id" />
+                              <TableColumn fx:id="col_userEvent_accepted" prefWidth="88.0" text="accepted" />
+                              <TableColumn fx:id="col_userEvent_participant" prefWidth="169.0" text="participant" />
+                              <TableColumn fx:id="col_userEvent_food" prefWidth="166.0" text="food" />
+                          </columns>
+                        </TableView>
+                        <AnchorPane layoutY="199.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="199.0">
+                           <children>
+                              <Button layoutX="19.0" layoutY="76.0" mnemonicParsing="false" onAction="#signAccept" text="Zatwierdź" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="513.0" AnchorPane.topAnchor="76.0" />
+                              <Button layoutX="151.0" layoutY="108.0" mnemonicParsing="false" onAction="#deleteUserevent" text="Usuń" />
+                              <Button layoutX="19.0" layoutY="108.0" mnemonicParsing="false" onAction="#signAcceptAll" text="Zatwiedź wszystkich" />
+                              <Button layoutX="148.0" layoutY="76.0" mnemonicParsing="false" onAction="#signDeny" text="Oddal" AnchorPane.topAnchor="76.0" />
+                              <TextField fx:id="userEventUserIdTextField" layoutX="22.0" layoutY="41.0" prefHeight="25.0" prefWidth="63.0" styleClass="text-field" />
+                              <TextField fx:id="userEventEventIdTextField" layoutX="112.0" layoutY="42.0" prefHeight="25.0" prefWidth="61.0" styleClass="text-field" />
+                              <TextField fx:id="userEventAcceptedTextField" layoutX="194.0" layoutY="43.0" onKeyReleased="#checkAccepted" prefHeight="25.0" prefWidth="59.0" styleClass="text-field" />
+                              <TextField fx:id="userEventParticipantTextField" layoutX="270.0" layoutY="44.0" onKeyReleased="#checkAccepted" prefHeight="25.0" prefWidth="100.0" styleClass="text-field" />
+                              <TextField fx:id="userEventFoodTextField" layoutX="394.0" layoutY="45.0" onKeyReleased="#checkAccepted" prefHeight="25.0" prefWidth="100.0" styleClass="text-field" />
+                              <Label layoutX="22.0" layoutY="14.0" prefHeight="18.0" prefWidth="38.0" text="user_id" AnchorPane.bottomAnchor="115.0" AnchorPane.topAnchor="14.0" />
+                              <Label layoutX="112.0" layoutY="15.0" prefHeight="19.0" prefWidth="45.0" text="event_id" AnchorPane.bottomAnchor="113.0" AnchorPane.topAnchor="15.0" />
+                              <Label layoutX="194.0" layoutY="15.0" prefHeight="16.0" prefWidth="48.0" text="accepted" AnchorPane.bottomAnchor="116.0" AnchorPane.topAnchor="15.0" />
+                              <Label layoutX="270.0" layoutY="16.0" prefHeight="17.0" prefWidth="59.0" text="paticipant" />
+                              <Label layoutX="394.0" layoutY="17.0" prefHeight="17.0" prefWidth="30.0" text="food" />
+                           </children>
+                        </AnchorPane>
                      </children>
                   </AnchorPane>
               </content>

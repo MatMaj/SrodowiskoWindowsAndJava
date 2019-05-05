@@ -1,6 +1,8 @@
 package controllers;
 
 import impls.EventDAOImpl;
+import impls.UserEventDAOImpl;
+import interfaces.UserEventDAO;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -10,12 +12,16 @@ import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import models.Event;
+import models.UserEvent;
 
 import java.util.ArrayList;
 
 public class UserViewController {
     private FadeTransition fadeOut = new FadeTransition(Duration.millis(5400));
     private EventDAOImpl eventDAO = new EventDAOImpl();
+    private UserEventDAOImpl userEventDAO = new UserEventDAOImpl();
+    private Long userId;
+    private Long eventId;
 
     public void initialize(){
         setupFadeOut();
@@ -27,9 +33,6 @@ public class UserViewController {
 
     @FXML
     private Label topLabel;
-    public void setUserName(String userName){
-        topLabel.setText("Witaj " + userName + "!");
-    }
     @FXML
     private ComboBox<Event> nameComboBox;
     @FXML
@@ -45,7 +48,20 @@ public class UserViewController {
 
     @FXML
     void joinEvent(ActionEvent event) {
-
+        String participantType = participantTypeComboBox.getSelectionModel().getSelectedItem();
+        String foodType = foodTypeComboBox.getSelectionModel().getSelectedItem();
+        UserEvent userEvent = new UserEvent(userId, eventId, (short) 0, participantType, foodType);
+        if (!userEventDAO.checkConnection()) {
+            addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
+        } else if (userEventDAO.checkUserInEvent(userEvent)) {
+            addToInfoLabel("Jesteś już zapisany na to wydarzenie", Color.DARKGOLDENROD);
+        } else {
+            if (userEventDAO.addUserToEvent(userEvent)) {
+                addToInfoLabel("Pomyślnie zapisano", Color.GREEN);
+            } else {
+                addToInfoLabel("Coś poszło nie tak - spróbuj później", Color.RED);
+            }
+        }
     }
 
     @FXML
@@ -53,6 +69,7 @@ public class UserViewController {
         Event selectedEvent = nameComboBox.getSelectionModel().getSelectedItem();
         agendaField.setText(selectedEvent.getAgenda());
         dateField.setText(selectedEvent.getDate().toString());
+        eventId = selectedEvent.getId();
     }
 
     private void setupFadeOut(){
@@ -90,7 +107,12 @@ public class UserViewController {
         infoLabel.setVisible(true);
         fadeOut.playFromStart();
     }
-    private void endInfoLabelFadeOut(){
-        infoLabel.setVisible(false);
+
+    public void setUserName(String userName){
+        topLabel.setText("Witaj " + userName + "!");
+    }
+
+    public void setUserId(Long id) {
+        this.userId = id;
     }
 }

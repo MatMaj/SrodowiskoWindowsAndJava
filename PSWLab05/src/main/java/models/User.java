@@ -48,7 +48,8 @@ public class User {
         this.password = password;
     }
 
-    public User(String name, String surname, String rights) {
+    public User(Long id, String name, String surname, String rights) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.rights = rights;

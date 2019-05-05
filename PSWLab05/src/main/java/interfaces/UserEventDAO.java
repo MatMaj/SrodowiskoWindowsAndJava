@@ -1,12 +1,28 @@
 package interfaces;
 
+import models.UserEvent;
+
+import java.util.ArrayList;
+
 public interface UserEventDAO {
 
-    Boolean checkUserInEvent();
+    ArrayList<UserEvent> getAllUserEvent();
 
-    Boolean addUserToEvent();
+    ArrayList<UserEvent> getUserEvents(Long userId);
 
-    Boolean removeUserFromEvent();
+    Boolean acceptUserInEvent(UserEvent userEvent);
+
+    Boolean acceptEveryUser();
+
+    Boolean checkUserInEvent(UserEvent userEvent);
+
+    Boolean addUserToEvent(UserEvent userEvent);
+
+    Boolean deleteUserFromEvent(UserEvent userEvent);
+
+    Boolean deleteAllUser(Long userId);
+
+    Boolean deleteAllEvent(Long eventId);
 
     Boolean checkConnection();
 }

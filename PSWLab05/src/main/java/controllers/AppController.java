@@ -112,7 +112,7 @@ public class AppController {
                 addToInfoLabel("Błędne hasło lub login.", Color.RED);
                 failedLoginCounter++;
             } else {
-                successfulLogin(user.get().getRights(), user.get().getName(), login);
+                successfulLogin(user.get().getId() ,user.get().getRights(), user.get().getName(), login);
                 failedLoginCounter = 0;
             }
 
@@ -123,12 +123,12 @@ public class AppController {
         }
     }
 
-    private void successfulLogin(String rights, String name, String login) {
+    private void successfulLogin(Long id, String rights, String name, String login) {
         addToInfoLabel("Logowanie powiodło się! Witamy!", Color.GREEN);
         if (rights.equals("Admin")) {
             createAdminView(login);
         } else if (rights.equals("User")) {
-            createUserView(name);
+            createUserView(name, id);
         } else {
             addToInfoLabel("Twoje konto nie ma dostępu do aplikacji.", Color.YELLOW);
         }
@@ -237,7 +237,7 @@ public class AppController {
         infoLabel.setVisible(false);
     }
 
-    private void createUserView(String name) {
+    private void createUserView(String name, Long id) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/userView.fxml"));
             Parent root3 = fxmlLoader.load();
@@ -248,6 +248,7 @@ public class AppController {
 
             UserViewController controller = fxmlLoader.getController();
             controller.setUserName(name);
+            controller.setUserId(id);
             userStage.show();
 
             activeScene = true;
