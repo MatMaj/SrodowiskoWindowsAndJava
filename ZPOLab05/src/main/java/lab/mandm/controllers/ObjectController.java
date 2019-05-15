@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import lab.mandm.annotations.Named;
+import lab.mandm.classes.BecauseAnnotation;
 import lab.mandm.classes.ObjectFieldView;
 import org.apache.commons.beanutils.ConvertUtils;
 
@@ -14,6 +16,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,6 +55,7 @@ public class ObjectController {
     public void initialize() {
         setupTableView();
         setupComboBoxes();
+        setupStupidNameCuzSomething();
     }
 
     private void setupTableView() {
@@ -425,6 +429,10 @@ public class ObjectController {
 
     private void correctTextField(TextField tf) {
         tf.setStyle("-fx-background-color: white; -fx-border-color: #B5B5B5; -fx-border-radius: 3px;");
+    }
+
+    private void setupStupidNameCuzSomething() {
+        col_fld_name.setText(new BecauseAnnotation().getName());
     }
 
 }

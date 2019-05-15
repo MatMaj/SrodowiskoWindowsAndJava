@@ -1,5 +1,7 @@
 package lab.mandm.beanClasses;
 
+import lab.mandm.annotations.Named;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -50,6 +52,11 @@ public class Smartphone implements Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Named(name = "XD")
+    public void annotationXD() {
+
     }
 
     private enum Brand {
