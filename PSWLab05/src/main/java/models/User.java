@@ -1,14 +1,8 @@
 package models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.sql.Date;
 
-@Entity
-@Table(name="users")
 public class User {
-    @Id
     private Long id;
     private String name;
     private String surname;
@@ -59,10 +53,6 @@ public class User {
         this.name = name;
         this.surname = surname;
         this.rights = rights;
-    }
-
-    public User(){
-
     }
 
     public String getEmail() {

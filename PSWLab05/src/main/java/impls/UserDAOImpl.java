@@ -105,7 +105,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public Boolean checkConnection() {
         isSuccessful = false;
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX")) {
             isSuccessful = true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -217,7 +217,7 @@ public class UserDAOImpl implements UserDAO {
     private Connection getConnection() {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

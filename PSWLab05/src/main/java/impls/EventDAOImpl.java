@@ -1,82 +1,141 @@
 package impls;
 
 import interfaces.EventDAO;
-import models.BaseConf;
 import models.Event;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import java.sql.*;
-import java.util.List;
+import java.util.ArrayList;
 
 public class EventDAOImpl implements EventDAO {
     private Boolean isSuccessful;
-    public BaseConf baseConf = new BaseConf();
+
     @Override
-    public Event addEvent(Event event) {
-        try(Session session = baseConf.getSessionFactory().openSession()){
-            Transaction t = session.beginTransaction();
-            session.save(event);
-            t.commit();
-            return event;
+    public Boolean addEvent(Event event) {
+        isSuccessful = true;
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.prepareStatement("INSERT INTO events VALUES(NULL,?,?,?)");
+            ((PreparedStatement) statement).setString(1, event.getName());
+            ((PreparedStatement) statement).setString(2, event.getAgenda());
+            ((PreparedStatement) statement).setDate(3, event.getDate());
+            ((PreparedStatement) statement).execute();
+        } catch (SQLException e) {
+            isSuccessful = false;
+            e.printStackTrace();
+        } finally {
+            return isSuccessful;
         }
     }
 
     @Override
-    public void deleteEvent(Long id) {
-        try(Session session = baseConf.getSessionFactory().openSession()){
-            Transaction t = session.beginTransaction();
-            Event event = new Event(id);
-            session.delete(event);
-            t.commit();
+    public Boolean deleteEvent(Long id) {
+        isSuccessful = true;
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.prepareStatement("DELETE FROM events WHERE id=?");
+            ((PreparedStatement) statement).setLong(1, id);
+            ((PreparedStatement) statement).execute();
+        } catch (SQLException e) {
+            isSuccessful = false;
+            e.printStackTrace();
+        } finally {
+            return isSuccessful;
         }
     }
 
     @Override
-    public void modifyEvent(Event event) {
-        try(Session session = baseConf.getSessionFactory().openSession()){
-            Transaction t = session.beginTransaction();
-            session.update(event);
-            t.commit();
+    public Boolean modifyEvent(Event event) {
+        isSuccessful = true;
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.prepareStatement("UPDATE events SET name=?, agenda=?, date=? WHERE id=?");
+            ((PreparedStatement) statement).setString(1, event.getName());
+            ((PreparedStatement) statement).setString(2, event.getAgenda());
+            ((PreparedStatement) statement).setDate(3, event.getDate());
+            ((PreparedStatement) statement).setLong(4, event.getId());
+            ((PreparedStatement) statement).execute();
+        } catch (SQLException e) {
+            isSuccessful = false;
+            e.printStackTrace();
+        } finally {
+            return isSuccessful;
         }
     }
 
     @Override
-    public List<Event> getEvents() {
-        try(Session session = baseConf.getSessionFactory().openSession()){
-            List<Event> events = session.createCriteria(Event.class).list();
+    public ArrayList<Event> getEvents() {
+        ArrayList<Event> events = new ArrayList<Event>();
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.prepareStatement("SELECT * FROM events");
+            ResultSet resultSet = ((PreparedStatement) statement).executeQuery();
+            while (resultSet.next()) {
+                Long id = resultSet.getLong("id");
+                String name = resultSet.getString("name");
+                String agenda = resultSet.getString("agenda");
+                Date date = resultSet.getDate("date");
+                events.add(new Event(id, name, agenda, date));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             return events;
         }
     }
 
     @Override
-    public List<Event> checkEventId(Long id) {
-        try(Session session = baseConf.getSessionFactory().openSession()){
-            Query q = session.createQuery("FROM Event e WHERE e.id=:id").setLong("id",id);
-            return q.list();
+    public Boolean checkConnection() {
+        isSuccessful = false;
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX")) {
+            isSuccessful = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            return isSuccessful;
+        }
+    }
+
+    @Override
+    public Boolean checkEventId(Long id) {
+        isSuccessful = false;
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.prepareStatement("SELECT * FROM events WHERE id=?");
+            ((PreparedStatement) statement).setLong(1, id);
+            ResultSet resultSet = ((PreparedStatement) statement).executeQuery();
+            if (resultSet.isBeforeFirst()){
+                isSuccessful = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            return isSuccessful;
         }
     }
 
     @Override
     public Event getNewestEvent(){
         Event event = null;
-        try(Session session = baseConf.getSessionFactory().openSession()) {
-            Query q = session.createQuery("FROM Event e ORDER BY e.id DESC");
-            event = (Event) q.setFirstResult(0).list().get(0);
-        }
-        return event;
-    }
-
-    @Override
-    public Boolean checkConnection() {
-        isSuccessful = false;
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root")) {
-            isSuccessful = true;
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.prepareStatement("SELECT * FROM events ORDER BY id DESC LIMIT 1");
+            ResultSet resultSet = ((PreparedStatement) statement).executeQuery();
+            if (resultSet.next()) {
+                Long id = resultSet.getLong("id");
+                String name = resultSet.getString("name");
+                String agenda = resultSet.getString("agenda");
+                Date date = resultSet.getDate("date");
+                event = new Event(id, name, agenda, date);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            return isSuccessful;
+            return event;
+        }
+    }
+
+    private Connection getConnection() {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            return connection;
         }
     }
 }

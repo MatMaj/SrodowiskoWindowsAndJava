@@ -21,7 +21,6 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,8 +30,8 @@ public class AdminViewController {
     private EventDAOImpl eventDAO = new EventDAOImpl();
     private UserEventDAOImpl userEventDAO = new UserEventDAOImpl();
     private ArrayList<User> users;
-    private List<Event> events;
-    private List<UserEvent> userEvents;
+    private ArrayList<Event> events;
+    private ArrayList<UserEvent> userEvents;
     private String userLogin = "";
     private String oldPassword = "";
     private Event oldEvent;
@@ -98,11 +97,11 @@ public class AdminViewController {
             rowUserEvent.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !rowUserEvent.isEmpty()) {
                     UserEvent userEvent = rowUserEvent.getItem();
-                    userEventUserIdTextField.setText(userEvent.getUser_id().toString());
-                    userEventEventIdTextField.setText(userEvent.getEvent_id().toString());
+                    userEventUserIdTextField.setText(userEvent.getUserId().toString());
+                    userEventEventIdTextField.setText(userEvent.getEventId().toString());
                     userEventAcceptedTextField.setText(String.valueOf(userEvent.getAccepted()));
-                    userEventParticipantTextField.setText(userEvent.getParticipant());
-                    userEventFoodTextField.setText(userEvent.getFood());
+                    userEventParticipantTextField.setText(userEvent.getParticipantType());
+                    userEventFoodTextField.setText(userEvent.getFoodType());
                 }
             });
             return rowUserEvent;
@@ -125,11 +124,11 @@ public class AdminViewController {
         col_event_agenda.setCellValueFactory(new PropertyValueFactory<Event, String>("agenda"));
         col_event_date.setCellValueFactory(new PropertyValueFactory<Event, Date>("date"));
 
-        col_userEvent_userId.setCellValueFactory(new PropertyValueFactory<UserEvent, Long>("user_id"));
-        col_userEvent_eventId.setCellValueFactory(new PropertyValueFactory<UserEvent, Long>("event_id"));
+        col_userEvent_userId.setCellValueFactory(new PropertyValueFactory<UserEvent, Long>("userId"));
+        col_userEvent_eventId.setCellValueFactory(new PropertyValueFactory<UserEvent, Long>("eventId"));
         col_userEvent_accepted.setCellValueFactory(new PropertyValueFactory<UserEvent, Short>("accepted"));
-        col_userEvent_participant.setCellValueFactory(new PropertyValueFactory<UserEvent, String>("participant"));
-        col_userEvent_food.setCellValueFactory(new PropertyValueFactory<UserEvent, String>("food"));
+        col_userEvent_participant.setCellValueFactory(new PropertyValueFactory<UserEvent, String>("participantType"));
+        col_userEvent_food.setCellValueFactory(new PropertyValueFactory<UserEvent, String>("foodType"));
     }
 
     @FXML
@@ -263,6 +262,7 @@ public class AdminViewController {
 
     @FXML
     void addEvent(ActionEvent event) {
+        //Long id = Long.parseLong(eventIdTextField.getText());
         String name = eventNameTextField.getText();
         String agenda = eventAgendaTextField.getText();
         String dateTemp = eventDateTextField.getText().trim().toLowerCase();
@@ -275,17 +275,19 @@ public class AdminViewController {
         } else if (!checkDateCorrectness(date)) {
             addToInfoLabel("Data jest w złym formacie", Color.RED);
         } else {
-            Event eventObject = new Event(0L,name, agenda, Date.valueOf(date));
-            eventDAO.addEvent(eventObject);
-            events.add(eventDAO.getNewestEvent());
-            eventTableView.refresh();
-            clearEventFields();
-
+            Event eventObject = new Event(name, agenda, Date.valueOf(date));
+            if (eventDAO.addEvent(eventObject)) {
+                events.add(eventDAO.getNewestEvent());
+                eventTableView.refresh();
+                clearEventFields();
+                addToInfoLabel("Pomyślnie dodano użytkownika", Color.GREEN);
+            }
         }
     }
 
     @FXML
     void addUser(ActionEvent event) {
+        //Long id = Long.parseLong(userIdTextField.getText());
         String login = userLoginTextField.getText().trim();
         String password = userPasswordTextField.getText().trim();
         String name = userNameTextField.getText().trim();
@@ -325,14 +327,18 @@ public class AdminViewController {
             addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
         } else if (!isNumeric(idString)) {
             addToInfoLabel("Id musi być liczbą całkowitą", Color.RED);
-        } else if (eventDAO.checkEventId(Long.parseLong(idString)).isEmpty()){
+        } else if (!eventDAO.checkEventId(Long.parseLong(idString))) {
             addToInfoLabel("Brak wydarzenia o podanym id", Color.RED);
         } else {
             Long id = Long.parseLong(idString);
-            eventDAO.deleteEvent(id);
-            userEventDAO.deleteAllEvent(id);
-            deleteEventFromTableView(id);
-            clearEventFields();
+            if (eventDAO.deleteEvent(id)) {
+                userEventDAO.deleteAllEvent(id);
+                deleteEventFromTableView(id);
+                clearEventFields();
+                addToInfoLabel("Pomyślnie usunięto wydarzenie", Color.GREEN);
+            } else {
+                addToInfoLabel("Usuwanie nie powiodło się - spróbuj później!", Color.RED);
+            }
         }
     }
 
@@ -408,7 +414,7 @@ public class AdminViewController {
             addToInfoLabel("Id musi być liczbą całkowitą", Color.RED);
         } else if (!checkDateCorrectness(dateString)) {
             addToInfoLabel("Data jest w złym formacie", Color.RED);
-        } else if (eventDAO.checkEventId(Long.parseLong(idString)).isEmpty()) {
+        } else if (!eventDAO.checkEventId(Long.parseLong(idString))) {
             addToInfoLabel("Brak wydarzenia o podanym id", Color.RED);
         } else {
             Long id = Long.parseLong(idString);
@@ -417,9 +423,13 @@ public class AdminViewController {
             if (oldEvent.getDate().equals(date) && oldEvent.getName().equals(name) && oldEvent.getAgenda().equals(agenda)) {
                 addToInfoLabel("Nic się nie zmieni", Color.DARKGOLDENROD);
             } else {
-                eventDAO.modifyEvent(eventObject);
-                modifyEventInTableView(eventObject);
-                clearEventFields();
+                if (eventDAO.modifyEvent(eventObject)) {
+                    modifyEventInTableView(eventObject);
+                    clearEventFields();
+                    addToInfoLabel("Zmodyfikonowano pomyślnie", Color.GREEN);
+                } else {
+                    addToInfoLabel("Coś poszło nie tak - spóbuj później!", Color.RED);
+                }
             }
         }
     }
@@ -472,14 +482,18 @@ public class AdminViewController {
             addToInfoLabel("Id muszą być liczbą całkowitą", Color.RED);
         } else if (!userDAO.checkUserId(Long.parseLong(userIdString))) {
             addToInfoLabel("Brak użytkownika o podanym id", Color.RED);
-        } else if (eventDAO.checkEventId(Long.parseLong(eventIdString)).isEmpty()) {
+        } else if (!eventDAO.checkEventId(Long.parseLong(eventIdString))) {
             addToInfoLabel("Brak wydarzenia o podanym id", Color.RED);
         } else {
             Long userId = Long.parseLong(userIdString);
             Long eventId = Long.parseLong(eventIdString);
-            userEventDAO.acceptUserInEvent(new UserEvent(userId, eventId, (short) 1));
-            acceptUserInEventInTableView(userId, eventId, (short) 1);
-            clearUserEventFields();
+           if (userEventDAO.acceptUserInEvent(new UserEvent(userId, eventId, (short) 1))) {
+               acceptUserInEventInTableView(userId, eventId, (short) 1);
+               clearUserEventFields();
+               addToInfoLabel("Zaakeptowano użytkownika", Color.GREEN);
+           } else {
+               addToInfoLabel("Coś poszło nie tak - spóbuj później!", Color.RED);
+           }
         }
     }
 
@@ -488,8 +502,12 @@ public class AdminViewController {
         if (!userEventDAO.checkConnection()){
             addToInfoLabel("Brak połączenia z bazą - sprawdź połączenie!", Color.DARKRED);
         } else {
-            userEventDAO.acceptEveryUser();
-            acceptEveryUserInTableView();
+            if (userEventDAO.acceptEveryUser()) {
+                acceptEveryUserInTableView();
+                addToInfoLabel("Zaakceptowano wszystko", Color.GREEN);
+            } else {
+                addToInfoLabel("Coś poszło nie tak - spóbuj później!", Color.RED);
+            }
         }
     }
 
@@ -505,14 +523,18 @@ public class AdminViewController {
             addToInfoLabel("Id muszą być liczbą całkowitą", Color.RED);
         } else if (!userDAO.checkUserId(Long.parseLong(userIdString))) {
             addToInfoLabel("Brak użytkownika o podanym id", Color.RED);
-        } else if (eventDAO.checkEventId(Long.parseLong(eventIdString)).isEmpty()) {
+        } else if (!eventDAO.checkEventId(Long.parseLong(eventIdString))) {
             addToInfoLabel("Brak wydarzenia o podanym id", Color.RED);
         } else {
             Long userId = Long.parseLong(userIdString);
             Long eventId = Long.parseLong(eventIdString);
-            userEventDAO.acceptUserInEvent(new UserEvent(userId, eventId, (short) 2));
-            acceptUserInEventInTableView(userId, eventId, (short) 2);
-            clearUserEventFields();
+            if (userEventDAO.acceptUserInEvent(new UserEvent(userId, eventId, (short) 2))) {
+                acceptUserInEventInTableView(userId, eventId, (short) 2);
+                clearUserEventFields();
+                addToInfoLabel("Odrzucono użytkownika", Color.GREEN);
+            } else {
+                addToInfoLabel("Coś poszło nie tak - spóbuj później!", Color.RED);
+            }
         }
     }
 
@@ -580,7 +602,7 @@ public class AdminViewController {
 
     private void deleteUserEventFromTableView(UserEvent userEvent) {
         for (UserEvent ue : userEvents) {
-            if (ue.getUser_id().equals(userEvent.getUser_id()) && ue.getEvent_id().equals(userEvent.getEvent_id())) {
+            if (ue.getUserId().equals(userEvent.getUserId()) && ue.getEventId().equals(userEvent.getEventId())) {
                 userEvents.remove(ue);
                 userEventTableView.refresh();
                 break;
@@ -591,7 +613,7 @@ public class AdminViewController {
 
     private void deleteUserEVENTFromTableView(Long eventId) {
         for (UserEvent ue : userEvents) {
-            if (ue.getEvent_id().equals(eventId)) {
+            if (ue.getEventId().equals(eventId)) {
                 userEvents.remove(ue);
             }
         }
@@ -600,7 +622,7 @@ public class AdminViewController {
 
     private void deleteUSEREventFromTableView(Long userId) {
         for (UserEvent ue : userEvents) {
-            if (ue.getUser_id().equals(userId)) {
+            if (ue.getUserId().equals(userId)) {
                 userEvents.remove(ue);
             }
         }
@@ -618,7 +640,7 @@ public class AdminViewController {
 
     private void acceptUserInEventInTableView(Long userId, Long eventId, short accpeted) {
         for (UserEvent ue : userEvents) {
-            if (ue.getUser_id().equals(userId) && ue.getEvent_id().equals(eventId)) {
+            if (ue.getUserId().equals(userId) && ue.getEventId().equals(eventId)) {
                 ue.setAccepted(accpeted);
                 userEventTableView.refresh();
                 break;

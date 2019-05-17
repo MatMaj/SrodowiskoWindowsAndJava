@@ -14,7 +14,7 @@ public class Main extends Application {
         Parent root = (Parent)fxmlLoader.load();
 
         primaryStage.setTitle("Aplikacja logująca");
-        primaryStage.setScene(new Scene(root,600,400));
+        primaryStage.setScene(new Scene(root));
         primaryStage.getScene().getStylesheets().add("/appLoginStyle.css");
         primaryStage.setResizable(false);
         primaryStage.show();
