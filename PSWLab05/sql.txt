@@ -23,6 +23,7 @@ INSERT INTO events VALUES(NULL,'Zbieranie grzybów', 'Leśnicy Morscy', now());
 INSERT INTO events VALUES(NULL,'Odkurzanie piwnicy', 'Piwniczane Gosposie', now());
 
 create table user_event (
+id int PRIMARY KEY auto_increment,
 user_id int,
 event_id int,
 accepted tinyint,

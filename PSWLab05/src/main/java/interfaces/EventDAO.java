@@ -3,18 +3,19 @@ package interfaces;
 import models.Event;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface EventDAO {
 
-    Boolean addEvent(Event event);
+    Event addEvent(Event event);
 
-    Boolean deleteEvent(Long id);
+    void deleteEvent(Long id);
 
-    Boolean modifyEvent(Event event);
+    void modifyEvent(Event event);
 
-    ArrayList<Event> getEvents();
+    List<Event> getEvents();
 
-    Boolean checkEventId(Long id);
+    List<Event> checkEventId(Long id);
 
     Event getNewestEvent();
 

@@ -243,7 +243,7 @@ public class AppController {
             Parent root3 = fxmlLoader.load();
             Stage userStage = new Stage();
             userStage.setTitle("Widok użytkownika " + name);
-            userStage.setScene(new Scene(root3));
+            userStage.setScene(new Scene(root3,600,400));
             userStage.setResizable(false);
 
             UserViewController controller = fxmlLoader.getController();
@@ -264,7 +264,7 @@ public class AppController {
             Parent root2 = fxmlLoader.load();
             Stage adminStage = new Stage();
             adminStage.setTitle("Admin");
-            adminStage.setScene(new Scene(root2));
+            adminStage.setScene(new Scene(root2,600,400));
             adminStage.getScene().getStylesheets().add("/adminStyle.css");
             adminStage.setResizable(false);
 

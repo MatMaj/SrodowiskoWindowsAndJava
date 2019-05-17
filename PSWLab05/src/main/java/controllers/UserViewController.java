@@ -15,6 +15,7 @@ import models.Event;
 import models.UserEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserViewController {
     private FadeTransition fadeOut = new FadeTransition(Duration.millis(5400));
@@ -81,10 +82,9 @@ public class UserViewController {
     }
 
     private void addEvents(){
-        ArrayList<Event> events = eventDAO.getEvents();
+        List<Event> events = eventDAO.getEvents();
         ObservableList<Event> eventsObservableList = FXCollections.observableList(events);
         nameComboBox.setItems(eventsObservableList);
-        //nameComboBox.getSelectionModel().selectFirst();
     }
 
     private void addFoodTypes(){

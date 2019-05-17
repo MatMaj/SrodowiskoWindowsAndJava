@@ -1,8 +1,14 @@
 package models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.Date;
 
+@Entity
+@Table(name="events")
 public class Event {
+    @Id
     private Long id;
     private String name;
     private String agenda;
@@ -19,6 +25,14 @@ public class Event {
         this.name = name;
         this.agenda = agenda;
         this.date = date;
+    }
+
+    public Event(){
+
+    }
+
+    public Event(Long id){
+        this.id=id;
     }
 
     @Override

@@ -1,63 +1,73 @@
 package models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="user_event")
 public class UserEvent {
-    private Long userId;
-    private Long eventId;
+    @Id
+    private Long id;
+    private Long user_id;
+    private Long event_id;
     private Short accepted;
-    private String foodType;
-    private String participantType;
+    private String food;
+    private String participant;
 
-    public UserEvent(Long userId, Long eventId, Short accepted, String participantType, String foodType) {
-        this.userId = userId;
-        this.eventId = eventId;
+    public UserEvent(Long user_id, Long event_id, Short accepted, String participant, String food) {
+        this.user_id = user_id;
+        this.event_id = event_id;
         this.accepted = accepted;
-        this.foodType = foodType;
-        this.participantType = participantType;
+        this.food = food;
+        this.participant = participant;
     }
 
-    public UserEvent(Long userId, Long eventId, Short accepted) {
-        this.userId = userId;
-        this.eventId = eventId;
+    public UserEvent(Long user_id, Long event_id, Short accepted) {
+        this.user_id = user_id;
+        this.event_id = event_id;
         this.accepted = accepted;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserEvent(){
+
     }
 
-    public Long getEventId() {
-        return eventId;
+    public Long getUser_id() {
+        return user_id;
+    }
+
+    public Long getEvent_id() {
+        return event_id;
     }
 
     public Short getAccepted() {
         return accepted;
     }
 
-    public String getFoodType() {
-        return foodType;
+    public String getFood() {
+        return food;
     }
 
-    public String getParticipantType() {
-        return participantType;
+    public String getParticipant() {
+        return participant;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
+    public void setEvent_id(Long event_id) {
+        this.event_id = event_id;
     }
 
     public void setAccepted(Short accepted) {
         this.accepted = accepted;
     }
 
-    public void setFoodType(String foodType) {
-        this.foodType = foodType;
+    public void setFood(String food) {
+        this.food = food;
     }
 
-    public void setParticipantType(String participantType) {
-        this.participantType = participantType;
+    public void setParticipant(String participant) {
+        this.participant = participant;
     }
 }

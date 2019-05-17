@@ -3,16 +3,15 @@ package interfaces;
 import models.UserEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface UserEventDAO {
 
-    ArrayList<UserEvent> getAllUserEvent();
+    List<UserEvent> getAllUserEvent();
 
-    ArrayList<UserEvent> getUserEvents(Long userId);
+    void acceptUserInEvent(UserEvent userEvent);
 
-    Boolean acceptUserInEvent(UserEvent userEvent);
-
-    Boolean acceptEveryUser();
+    void acceptEveryUser();
 
     Boolean checkUserInEvent(UserEvent userEvent);
 
