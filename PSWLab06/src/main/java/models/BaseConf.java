@@ -13,7 +13,7 @@ public class BaseConf {
         properties.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
         properties.setProperty("hibernate.connection.url", "jdbc:mysql://localhost/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC");
         properties.setProperty("hibernate.connection.username", "root");
-        properties.setProperty("hibernate.connection.password", "zaq1@WSX");
+        properties.setProperty("hibernate.connection.password", "root");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.show_sql", "true");

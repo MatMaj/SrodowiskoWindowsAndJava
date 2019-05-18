@@ -71,7 +71,7 @@ public class EventDAOImpl implements EventDAO {
     @Override
     public Boolean checkConnection() {
         isSuccessful = false;
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root")) {
             isSuccessful = true;
         } catch (SQLException e) {
             e.printStackTrace();

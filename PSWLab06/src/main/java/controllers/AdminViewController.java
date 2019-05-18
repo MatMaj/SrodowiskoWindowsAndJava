@@ -357,14 +357,6 @@ public class AdminViewController {
             addToInfoLabel("Brak użytkownika o podanym id", Color.RED);
         } else {
             Long id = Long.parseLong(idString);
-            /*if (userDAO.deleteUser(id)) {
-                userEventDAO.deleteAllUser(id);
-                deleteUserFromTableView(id);
-                clearUserFields();
-                addToInfoLabel("Pomyślnie usunięto użytkownika", Color.GREEN);
-            } else {
-                addToInfoLabel("Usuwanie nie powiodło się - spróbuj później!", Color.RED);
-            }*/
             userDAO.deleteUser(id);
             userEventDAO.deleteAllUser(id);
             deleteUserFromTableView(id);
@@ -393,12 +385,6 @@ public class AdminViewController {
             Long eventId = Long.parseLong(eventIdString);
             short accepted = Short.valueOf(acceptedString);
             UserEvent userEvent = new UserEvent(userId, eventId, accepted, participantType, foodType);
-            /*if (userEventDAO.deleteUserFromEvent(userEvent)) {
-                deleteUserEventFromTableView(userEvent);
-                addToInfoLabel("Usunięto pomyślnie", Color.GREEN);
-            } else {
-                addToInfoLabel("Coś poszło nie tak - spóbuj później!", Color.RED);
-            }*/
             userEventDAO.deleteUserFromEvent(userEvent);
             deleteUserEventFromTableView(userEvent);
             addToInfoLabel("Usunięto pomyślnie", Color.GREEN);

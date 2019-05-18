@@ -57,11 +57,6 @@ public class UserViewController {
         } else if (!userEventDAO.checkUserInEvent(userEvent)) {
             addToInfoLabel("Jesteś już zapisany na to wydarzenie", Color.DARKGOLDENROD);
         } else {
-            /*if (userEventDAO.addUserToEvent(userEvent)) {
-                addToInfoLabel("Pomyślnie zapisano", Color.GREEN);
-            } else {
-                addToInfoLabel("Coś poszło nie tak - spróbuj później", Color.RED);
-            }*/
             userEventDAO.addUserToEvent(userEvent);
             addToInfoLabel("Pomyślnie zapisano", Color.GREEN);
         }

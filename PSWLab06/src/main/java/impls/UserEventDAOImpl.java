@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
+import org.hibernate.sql.Delete;
 
 import java.sql.*;
 import java.util.List;
@@ -67,88 +68,55 @@ public class UserEventDAOImpl implements UserEventDAO {
             }
 
         }
-
-        /*isSuccessful = false;
-        try (Connection connection = getConnection()) {
-            Statement statement = connection.prepareStatement("SELECT * FROM user_event WHERE user_id=? AND event_id=?");
-            ((PreparedStatement) statement).setLong(1, userEvent.getUser_id());
-            ((PreparedStatement) statement).setLong(2, userEvent.getEvent_id());
-            ResultSet resultSet = ((PreparedStatement) statement).executeQuery();
-            if (resultSet.isBeforeFirst()) {
-                isSuccessful = true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            return isSuccessful;
-        }*/
     }
 
     @Override
     public void addUserToEvent(UserEvent userEvent) {
-        isSuccessful = true;
-        try (Connection connection = getConnection()) {
-            Statement statement = connection.prepareStatement("INSERT INTO user_event VALUES(?,?,?,?,?,?)");
-            ((PreparedStatement) statement).setLong(1, 0);
-            ((PreparedStatement) statement).setLong(2, userEvent.getUser_id());
-            ((PreparedStatement) statement).setLong(3, userEvent.getEvent_id());
-            ((PreparedStatement) statement).setShort(4, userEvent.getAccepted());
-            ((PreparedStatement) statement).setString(5, userEvent.getParticipant());
-            ((PreparedStatement) statement).setString(6, userEvent.getFood());
-            ((PreparedStatement) statement).execute();
-        } catch (SQLException e) {
-            isSuccessful = false;
-            e.printStackTrace();
+        try(Session session = baseConf.getSessionFactory().openSession()){
+            Transaction t = session.beginTransaction();
+            userEvent.setId(0L);
+            session.save(userEvent);
+            t.commit();
         }
     }
 
     @Override
     public void deleteUserFromEvent(UserEvent userEvent) {
-        try (Connection connection = getConnection()) {
-            Statement statement = connection.prepareStatement("DELETE FROM user_event WHERE user_id=? AND event_id=?");
-            ((PreparedStatement) statement).setLong(1, userEvent.getUser_id());
-            ((PreparedStatement) statement).setLong(2, userEvent.getEvent_id());
-            ((PreparedStatement) statement).execute();
-        } catch (SQLException e) {
-            isSuccessful = false;
-            e.printStackTrace();
+        try(Session session = baseConf.getSessionFactory().openSession()){
+            Transaction t = session.beginTransaction();
+            String sql = "DELETE FROM user_event WHERE user_id="+userEvent.getUser_id()+" and event_id="+userEvent.getEvent_id();
+            SQLQuery query = session.createSQLQuery(sql);
+            query.executeUpdate();
+            t.commit();
         }
     }
 
     @Override
-    public Boolean deleteAllUser(Long userId) {
-        isSuccessful = true;
-        try (Connection connection = getConnection()) {
-            Statement statement = connection.prepareStatement("DELETE FROM user_event WHERE user_id=?");
-            ((PreparedStatement) statement).setLong(1, userId);
-            ((PreparedStatement) statement).execute();
-        } catch (SQLException e) {
-            isSuccessful = false;
-            e.printStackTrace();
-        } finally {
-            return isSuccessful;
+    public void deleteAllUser(Long userId) {
+        try(Session session = baseConf.getSessionFactory().openSession()){
+            Transaction t = session.beginTransaction();
+            String sql = "DELETE FROM user_event WHERE user_id="+userId;
+            SQLQuery query = session.createSQLQuery(sql);
+            query.executeUpdate();
+            t.commit();
         }
     }
 
     @Override
-    public Boolean deleteAllEvent(Long eventId) {
-        isSuccessful = true;
-        try (Connection connection = getConnection()) {
-            Statement statement = connection.prepareStatement("DELETE FROM user_event WHERE event_id=?");
-            ((PreparedStatement) statement).setLong(1, eventId);
-            ((PreparedStatement) statement).execute();
-        } catch (SQLException e) {
-            isSuccessful = false;
-            e.printStackTrace();
-        } finally {
-            return isSuccessful;
+    public void deleteAllEvent(Long eventId) {
+        try(Session session = baseConf.getSessionFactory().openSession()){
+            Transaction t = session.beginTransaction();
+            String sql = "DELETE FROM user_event WHERE event_id="+eventId;
+            SQLQuery query = session.createSQLQuery(sql);
+            query.executeUpdate();
+            t.commit();
         }
     }
 
     @Override
     public Boolean checkConnection() {
         isSuccessful = false;
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root")) {
             isSuccessful = true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -160,7 +128,7 @@ public class UserEventDAOImpl implements UserEventDAO {
     private Connection getConnection() {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

@@ -31,6 +31,14 @@ public class UserEvent {
 
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getUser_id() {
         return user_id;
     }

@@ -103,18 +103,6 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Boolean checkConnection() {
-        isSuccessful = false;
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX")) {
-            isSuccessful = true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            return isSuccessful;
-        }
-    }
-
-    @Override
     public void deleteUser(Long id) {
         try (Connection connection = getConnection()) {
             Statement statement = connection.prepareStatement("DELETE FROM users WHERE id=?");
@@ -209,11 +197,22 @@ public class UserDAOImpl implements UserDAO {
     private Connection getConnection() {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "zaq1@WSX");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             return connection;
+        }
+    }
+    @Override
+    public Boolean checkConnection() {
+        isSuccessful = false;
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root")) {
+            isSuccessful = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            return isSuccessful;
         }
     }
 }

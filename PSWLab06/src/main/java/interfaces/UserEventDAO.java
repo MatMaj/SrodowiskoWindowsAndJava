@@ -18,9 +18,9 @@ public interface UserEventDAO {
 
     void deleteUserFromEvent(UserEvent userEvent);
 
-    Boolean deleteAllUser(Long userId);
+    void deleteAllUser(Long userId);
 
-    Boolean deleteAllEvent(Long eventId);
+    void deleteAllEvent(Long eventId);
 
     Boolean checkConnection();
 }
