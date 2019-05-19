@@ -3,6 +3,7 @@ package interfaces;
 import models.User;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDAO {
@@ -22,7 +23,7 @@ public interface UserDAO {
 
     Boolean checkUserId(Long id);
 
-    ArrayList<User> getUsers();
+    List<User> getUsers();
 
     void addUser(User user);
 

@@ -10,7 +10,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
-import org.hibernate.sql.Delete;
 
 import java.sql.*;
 import java.util.List;
@@ -122,17 +121,6 @@ public class UserEventDAOImpl implements UserEventDAO {
             e.printStackTrace();
         } finally {
             return isSuccessful;
-        }
-    }
-
-    private Connection getConnection() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            return connection;
         }
     }
 }

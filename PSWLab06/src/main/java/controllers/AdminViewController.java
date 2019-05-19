@@ -30,7 +30,7 @@ public class AdminViewController {
     private UserDAOImpl userDAO = new UserDAOImpl();
     private EventDAOImpl eventDAO = new EventDAOImpl();
     private UserEventDAOImpl userEventDAO = new UserEventDAOImpl();
-    private ArrayList<User> users;
+    private List<User> users;
     private List<Event> events;
     private List<UserEvent> userEvents;
     private String userLogin = "";
@@ -305,14 +305,6 @@ public class AdminViewController {
             addToInfoLabel("Email jest w złym formacie", Color.RED);
         } else {
             User user = new User(name, surname, email, login, password, rights, Date.valueOf(date));
-            /*if (userDAO.addUser(user)) {
-                users.add(userDAO.getNewestUser());
-                userTableView.refresh();
-                clearUserFields();
-                addToInfoLabel("Pomyślnie dodano użytkownika", Color.GREEN);
-            } else {
-                addToInfoLabel("Dodawanie nie powiodło się - spróbuj później!", Color.RED);
-            }*/
             userDAO.addUser(user);
             users.add(userDAO.getNewestUser());
             userTableView.refresh();
@@ -439,13 +431,6 @@ public class AdminViewController {
         } else if (!userDAO.checkUserId(id)) {
             addToInfoLabel("Brak użytkownika o podanym id", Color.RED);
         } else {
-            /*if (userDAO.resetPassword(id, password)) {
-                updatePasswordInTableView(id, password);
-                clearUserFields();
-                addToInfoLabel("Pomyślnie zmieniono hasło", Color.GREEN);
-            } else {
-                addToInfoLabel("Zmiana nie powiodła się - spróbuj później", Color.RED);
-            }*/
             userDAO.resetPassword(id, password);
             updatePasswordInTableView(id, password);
             clearUserFields();
@@ -586,7 +571,6 @@ public class AdminViewController {
             if (ue.getUser_id().equals(userEvent.getUser_id()) && ue.getEvent_id().equals(userEvent.getEvent_id())) {
                 userEvents.remove(ue);
                 userEventTableView.refresh();
-                break;
             }
         }
 
