@@ -1,7 +1,6 @@
 package impls;
 
 import interfaces.UserDAO;
-import models.Event;
 import models.User;
 import models.BaseConf;
 import org.hibernate.HibernateException;
@@ -11,9 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class UserDAOImpl implements UserDAO {
     private Boolean isSuccessful;
@@ -38,33 +35,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Optional<User> loginUser(String login, String password) {
-        Optional<User> user;
-        try(Session session = baseConf.getSessionFactory().openSession()){
-            Transaction t = session.beginTransaction();
-            String sql = "SELECT * FROM users WHERE login="+"'"+login+"' AND password="+"'"+password+"'";
-            SQLQuery query = session.createSQLQuery(sql);
-            user=null;
-            t.commit();
+    public User loginUser(String login, String password) {
+        User user = null;
+        try(Session session = baseConf.getSessionFactory().openSession()) {
+            Query q = session.createQuery("FROM User u WHERE u.login=:login AND u.password=:password").setString("login",login)
+                    .setString("password",password);
+            user = (User) q.setFirstResult(0).list().get(0);
         }
-
-        /*try (Connection connection = getConnection()) {
-            Statement statement = connection.prepareStatement("SELECT * FROM users WHERE login=? AND password=?");
-            ((PreparedStatement) statement).setString(1, login);
-            ((PreparedStatement) statement).setString(2, password);
-            ResultSet resultSet = ((PreparedStatement) statement).executeQuery();
-            if (resultSet.isBeforeFirst()) {
-                resultSet.next();
-                user = Optional.of(new User(resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("surname"),
-                        resultSet.getString("rights")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            return user;
-        }*/
         return user;
     }
 
@@ -166,16 +143,6 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
-    private Connection getConnection() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginapp?useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            return connection;
-        }
-    }
     @Override
     public Boolean checkConnection() {
         isSuccessful = false;

@@ -18,6 +18,12 @@ public class BaseConf {
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.use_sql_comments", "true");
+        properties.setProperty("hibernate.c3p0.acquire_increrment","1");
+        properties.setProperty("hibernate.c3p0.idle_test_period","100");
+        properties.setProperty("hibernate.c3p0.max_size","10");
+        properties.setProperty("hibernate.c3p0.max_statements","10");
+        properties.setProperty("hibernate.c3p0.min_size","10");
+        properties.setProperty("hibernate.c3p0.timeout","100");
         Configuration configuration = new Configuration().addProperties(properties);
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Event.class);

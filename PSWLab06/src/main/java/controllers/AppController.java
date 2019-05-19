@@ -107,12 +107,12 @@ public class AppController {
         } else if (!checkIfEveryFieldIsFilled(login, password)) {
             addToInfoLabel("Pola muszą być wypełnione.", Color.RED);
         } else {
-            Optional<User> user = userDAO.loginUser(login, password);
-            if (!user.isPresent()) {
+            User user = userDAO.loginUser(login, password);
+            if (user==null) {
                 addToInfoLabel("Błędne hasło lub login.", Color.RED);
                 failedLoginCounter++;
             } else {
-                successfulLogin(user.get().getId() ,user.get().getRights(), user.get().getName(), login);
+                successfulLogin(user.getId() ,user.getRights(), user.getName(), login);
                 failedLoginCounter = 0;
             }
 
